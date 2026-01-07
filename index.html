@@ -359,3 +359,56 @@
 
 </body>
 </html>
+<script>
+    // ฟังก์ชันนี้จะทำงานอัตโนมัติเมื่อแสดงผลหน้าสรุปคะแนน
+    // เพื่อระบุว่าข้อสอบแต่ละช่วงคือเนื้อหาอะไร
+    function getTopicDescription(index, sub) {
+        if (sub === 'eng') {
+            if (index < 10) return "ช่วงข้อ 1-10: Present Simple (เหตุการณ์ปัจจุบัน/นิสัย)";
+            if (index < 20) return "ช่วงข้อ 11-20: Present Continuous (กำลังทำอยู่ขณะนี้)";
+            if (index < 30) return "ช่วงข้อ 21-30: Past Simple (เหตุการณ์ในอดีต)";
+            if (index < 40) return "ช่วงข้อ 31-40: Present Perfect (เหตุการณ์ที่เกิดขึ้นตั้งแต่อดีตถึงปัจจุบัน)";
+            if (index < 50) return "ช่วงข้อ 41-50: Modal Verbs (กริยาช่วย: can, must, may)";
+            return "ช่วงข้อ 51-60: Grammar Mix (ไวยากรณ์ผสมและการเปรียบเทียบ)";
+        } else {
+            if (index < 5) return "ช่วงข้อ 1-5: วรรณคดี (นารายณ์ปราบนนทก)";
+            if (index < 10) return "ช่วงข้อ 6-10: คำราชาศัพท์พื้นฐาน";
+            if (index < 13) return "ช่วงข้อ 11-13: หลักภาษา (ชนิดของประโยค)";
+            if (index < 19) return "ช่วงข้อ 14-19: การเขียนเรียงความและจดหมาย";
+            return "ช่วงข้อ 20-60: เนื้อหาผสมวรรณคดีและหลักภาษาเชิงลึก";
+        }
+    }
+
+    // เพิ่มเติมการแสดงชื่อหมวดหมู่ในหน้าเฉลย (เพื่อให้ชัดเจนขึ้น)
+    // โดยการแก้ฟังก์ชันเดิมเล็กน้อยด้วย Script ต่อท้าย
+    const originalShowFinalResult = showFinalResult;
+    showFinalResult = function() {
+        originalShowFinalResult(); // เรียกใช้ฟังก์ชันเดิมก่อน
+        
+        // เพิ่มข้อมูล "ช่วงเนื้อหา" เข้าไปในหน้าสรุปผล
+        const recBox = document.getElementById('recommendation');
+        const infoDiv = document.createElement('div');
+        infoDiv.style.marginTop = "15px";
+        infoDiv.style.fontSize = "0.9rem";
+        infoDiv.style.textAlign = "left";
+        infoDiv.style.color = "#444";
+        infoDiv.innerHTML = "<b>โครงสร้างข้อสอบชุดนี้:</b><br>" + 
+            (currentSub === 'eng' ? 
+            "• ข้อ 1-10: Present Simple<br>• ข้อ 11-20: Present Cont.<br>• ข้อ 21-30: Past Simple<br>• ข้อ 31-40: Present Perfect<br>• ข้อ 41-50: Modals<br>• ข้อ 51-60: Grammar Mix" :
+            "• ข้อ 1-5: วรรณคดี<br>• ข้อ 6-10: ราชาศัพท์<br>• ข้อ 11-13: ประโยค<br>• ข้อ 14-19: การเขียน<br>• ข้อ 20-60: เนื้อหาเชิงลึก");
+        recBox.appendChild(infoDiv);
+    };
+</script>
+
+<style>
+    /* ปรับปรุงหน้าเฉลยให้ดูง่ายขึ้น */
+    .review-item b {
+        color: #2d3436;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .recommendation-box b {
+        font-size: 1.2rem;
+        color: #e67e22;
+    }
+</style>
