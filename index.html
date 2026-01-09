@@ -7,23 +7,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #6c5ce7;
-            --secondary-color: #a29bfe;
-            --bg-color: #f0f3f7;
-            --text-color: #2d3436;
-            --success-color: #00b894;
-            --error-color: #d63031;
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --bg: #f0f3f7;
+            --text: #2d3436;
+            --success: #00b894;
+            --error: #d63031;
             --white: #ffffff;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -35,327 +32,213 @@
         .container {
             background: var(--white);
             width: 100%;
-            max-width: 600px;
-            padding: 40px;
+            max-width: 650px;
+            padding: 35px;
             border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
         }
 
-        h1 {
-            text-align: center;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-        }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 25px; font-size: 1.8rem; }
 
-        /* Setup Style */
-        .input-group { margin-bottom: 25px; }
-        label.title { font-weight: 600; display: block; margin-bottom: 10px; }
-        
+        /* Progress Bar */
+        .progress-container { margin-bottom: 20px; }
+        .bar-bg { height: 8px; background: #eee; border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+
+        /* Setup Screen */
+        .input-group { margin-bottom: 20px; }
         select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e1e1;
-            border-radius: 12px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
+            width: 100%; padding: 12px; border-radius: 12px;
+            border: 2px solid #ddd; font-size: 1rem; outline: none;
         }
 
-        select:focus { border-color: var(--primary-color); }
-
-        /* Quiz Style */
-        .progress-bar {
-            height: 8px;
-            background: #eee;
-            border-radius: 4px;
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-        #progress-fill {
-            height: 100%;
-            background: var(--primary-color);
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-
-        .question-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-
-        .options-list { display: grid; gap: 12px; }
-
+        /* Quiz Screen */
+        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+        .options-list { display: grid; gap: 10px; }
         .option-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            border: 2px solid #f0f0f0;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            padding: 15px; border: 2px solid #f0f0f0; border-radius: 12px;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center;
         }
+        .option-item:hover { border-color: var(--secondary); background: #f9f9ff; }
+        .option-item.selected { background: var(--primary); border-color: var(--primary); color: white; }
 
-        .option-item:hover {
-            background-color: #f8f9ff;
-            border-color: var(--secondary-color);
-        }
-
-        .option-item input { display: none; }
-
-        .option-item.selected {
-            background-color: var(--secondary-color);
-            border-color: var(--primary-color);
-            color: white;
-        }
-
-        /* Button Style */
-        button {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            background: var(--primary-color);
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 25px;
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        button:active { transform: scale(0.98); }
-        button:hover { opacity: 0.9; }
-
-        /* Result Style */
-        .result-card { text-align: center; }
+        /* Result Screen */
+        .score-box { text-align: center; margin-bottom: 20px; }
         .score-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 20px;
+            width: 100px; height: 100px; background: var(--primary);
+            color: white; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; 
+            font-size: 2rem; font-weight: bold; margin: 0 auto 15px;
         }
-        .score-num { font-size: 2rem; font-weight: 600; }
-        .analysis-box {
-            background: #fff9f9;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            border-left: 5px solid var(--error-color);
-            text-align: left;
+        .analysis-box { 
+            background: #fff5f5; padding: 20px; border-radius: 15px; 
+            border-left: 6px solid var(--error); margin-top: 20px;
+            max-height: 300px; overflow-y: auto;
         }
 
+        button {
+            width: 100%; padding: 15px; border: none; border-radius: 12px;
+            background: var(--primary); color: white; font-size: 1rem;
+            font-weight: 600; cursor: pointer; margin-top: 20px;
+            transition: 0.2s;
+        }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
         .hidden { display: none; }
+        hr { border: none; border-top: 1px solid #ddd; margin: 15px 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="setup-screen">
-        <h1>⚙️ Simple Machines</h1>
+        <h1>⚙️ Machine Quiz</h1>
         <div class="input-group">
-            <label class="title">Select Your Identity</label>
+            <label style="font-weight: 600;">Identify Yourself:</label>
             <select id="gender-select">
                 <option value="Male 👨">Male (ชาย)</option>
                 <option value="Female 👩">Female (หญิง)</option>
                 <option value="Skoi 💅">Skoi (สก๊อย)</option>
             </select>
         </div>
-        <button onclick="startQuiz()">Start Evaluation</button>
+        <button onclick="startQuiz()">Start 30 Questions</button>
     </div>
 
     <div id="quiz-screen" class="hidden">
-        <div class="progress-bar"><div id="progress-fill"></div></div>
-        <div id="q-count" style="font-size: 0.8rem; color: #666; margin-bottom: 5px;">Question 1/30</div>
-        <div class="question-text" id="question-text">Loading question...</div>
-        <div class="options-list" id="options-list"></div>
-        <button id="next-btn" onclick="submitAnswer()">Next Question</button>
+        <div class="progress-container">
+            <div id="q-count" style="font-size: 0.85rem; margin-bottom: 5px;">Question 1/30</div>
+            <div class="bar-bg"><div id="progress-fill" class="bar-fill"></div></div>
+        </div>
+        <div id="question-text" class="question-text"></div>
+        <div id="options-list" class="options-list"></div>
+        <button id="next-btn" onclick="handleNext()">Submit Answer</button>
     </div>
 
     <div id="result-screen" class="hidden">
-        <div class="result-card">
-            <h1>Quiz Summary</h1>
-            <div class="score-circle">
-                <span id="final-score" class="score-num">0</span>
-                <span style="font-size: 0.8rem;">OUT OF 30</span>
-            </div>
-            <p>User: <span id="display-gender" style="font-weight: 600;"></span></p>
-            <div id="analysis-container" class="analysis-box"></div>
-            <button onclick="location.reload()" style="background: var(--text-color);">Retake Quiz</button>
+        <h1>Evaluation Results</h1>
+        <div class="score-box">
+            <div class="score-circle" id="final-score">0</div>
+            <p>Subject: <span id="res-gender" style="font-weight: 600;"></span></p>
         </div>
+        <div id="analysis-content" class="analysis-box"></div>
+        <button onclick="location.reload()" style="background: #2d3436;">Try Again</button>
     </div>
 </div>
 
 <script>
     const questions = [
-        { q: "Which simple machine uses a fulcrum to balance or move a load?", o: ["Lever", "Pulley", "Screw", "Wedge"], a: 0, cat: "Lever" },
-        { q: "A ramp is an example of which simple machine?", o: ["Wheel and Axle", "Inclined Plane", "Lever", "Pulley"], a: 1, cat: "Inclined Plane" },
-        { q: "What is the point on which a lever pivots?", o: ["Effort", "Load", "Fulcrum", "Base"], a: 2, cat: "Lever" },
-        { q: "Which machine consists of a grooved wheel and a rope?", o: ["Pulley", "Wedge", "Screw", "Lever"], a: 0, cat: "Pulley" },
-        { q: "An axe is an example of a:", o: ["Screw", "Wedge", "Lever", "Wheel and Axle"], a: 1, cat: "Wedge" },
-        { q: "Which of these is a 'double inclined plane' used to split objects?", o: ["Lever", "Screw", "Wedge", "Wheel"], a: 2, cat: "Wedge" },
-        { q: "A doorknob is a common example of a:", o: ["Pulley", "Wheel and Axle", "Lever", "Screw"], a: 1, cat: "Wheel and Axle" },
-        { q: "An inclined plane wrapped around a cylinder is a:", o: ["Wedge", "Screw", "Lever", "Wheel"], a: 1, cat: "Screw" },
-        { q: "Simple machines make work easier by changing the distance or the _______.", o: ["Mass", "Force", "Time", "Gravity"], a: 1, cat: "Basics" },
-        { q: "A see-saw is a _______ class lever.", o: ["First", "Second", "Third", "Fourth"], a: 0, cat: "Lever" },
-        { q: "A wheelbarrow is an example of a _______ class lever.", o: ["First", "Second", "Third", "None"], a: 1, cat: "Lever" },
-        { q: "Using a hammer to pull a nail is a:", o: ["Screw", "Lever", "Wedge", "Pulley"], a: 1, cat: "Lever" },
-        { q: "Tweezers are an example of a _______ class lever.", o: ["First", "Second", "Third", "Hybrid"], a: 2, cat: "Lever" },
-        { q: "A fixed pulley changes the _______ of the force.", o: ["Amount", "Direction", "Speed", "Distance"], a: 1, cat: "Pulley" },
-        { q: "The 'pitch' is a property of which simple machine?", o: ["Lever", "Screw", "Wedge", "Pulley"], a: 1, cat: "Screw" },
-        { q: "Which machine is used to hold things together?", o: ["Screw", "Lever", "Inclined Plane", "Pulley"], a: 0, cat: "Screw" },
-        { q: "A flagpole uses which machine to raise the flag?", o: ["Wheel and Axle", "Lever", "Pulley", "Wedge"], a: 2, cat: "Pulley" },
-        { q: "What happens to the effort needed if you make a ramp longer?", o: ["Increases", "Decreases", "Stays same", "Doubles"], a: 1, cat: "Inclined Plane" },
-        { q: "A bicycle's gears are a type of:", o: ["Lever", "Wheel and Axle", "Wedge", "Screw"], a: 1, cat: "Wheel and Axle" },
-        { q: "The mechanical advantage of a machine is the ratio of output force to _______.", o: ["Input force", "Gravity", "Friction", "Distance"], a: 0, cat: "Basics" },
-        { q: "Which of these is NOT a simple machine?", o: ["Screw", "Lever", "Engine", "Wedge"], a: 2, cat: "Basics" },
+        { q: "Which simple machine consists of a rigid bar that pivots on a fulcrum?", o: ["Lever", "Pulley", "Screw", "Wedge"], a: 0, cat: "Lever" },
+        { q: "A ramp used to load a truck is an example of an:", o: ["Inclined Plane", "Wedge", "Lever", "Wheel and Axle"], a: 0, cat: "Inclined Plane" },
+        { q: "The point where a lever rotates is called the:", o: ["Load", "Effort", "Fulcrum", "Base"], a: 2, cat: "Lever" },
+        { q: "Which machine uses a grooved wheel and a rope to lift objects?", o: ["Wedge", "Screw", "Pulley", "Lever"], a: 2, cat: "Pulley" },
+        { q: "A knife blade and an axe are examples of a:", o: ["Lever", "Wedge", "Screw", "Wheel and Axle"], a: 1, cat: "Wedge" },
+        { q: "A doorknob is a classic example of which machine?", o: ["Pulley", "Wheel and Axle", "Wedge", "Lever"], a: 1, cat: "Wheel and Axle" },
+        { q: "A screw is actually an __________ wrapped around a cylinder.", o: ["Inclined Plane", "Lever", "Wedge", "Pulley"], a: 0, cat: "Screw" },
+        { q: "Which machine is used to split materials apart?", o: ["Lever", "Wedge", "Pulley", "Screw"], a: 1, cat: "Wedge" },
+        { q: "Simple machines make work easier by reducing the needed _______.", o: ["Force", "Mass", "Gravity", "Time"], a: 0, cat: "Basics" },
+        { q: "A see-saw is which class of lever?", o: ["1st Class", "2nd Class", "3rd Class", "4th Class"], a: 0, cat: "Lever" },
+        { q: "A wheelbarrow is an example of which lever class?", o: ["1st Class", "2nd Class", "3rd Class", "None"], a: 1, cat: "Lever" },
+        { q: "Tweezers and fishing rods are examples of:", o: ["1st Class Lever", "2nd Class Lever", "3rd Class Lever", "Wedge"], a: 2, cat: "Lever" },
+        { q: "A fixed pulley changes the _______ of the applied force.", o: ["Amount", "Direction", "Speed", "Distance"], a: 1, cat: "Pulley" },
+        { q: "The distance between the threads on a screw is called the:", o: ["Gap", "Pitch", "Slope", "Path"], a: 1, cat: "Screw" },
+        { q: "Which of these is NOT a simple machine?", o: ["Lever", "Wedge", "Bicycle", "Pulley"], a: 2, cat: "Basics" },
+        { q: "To increase Mechanical Advantage on a ramp, you should make it:", o: ["Shorter", "Steeper", "Longer", "Heavier"], a: 2, cat: "Inclined Plane" },
+        { q: "A flagpole uses which machine to move the flag up?", o: ["Wedge", "Screw", "Pulley", "Wheel and Axle"], a: 2, cat: "Pulley" },
+        { q: "What is the formula for Work?", o: ["Force x Distance", "Mass x Gravity", "Force / Time", "Speed x Time"], a: 0, cat: "Basics" },
+        { q: "Gears are a modified version of which machine?", o: ["Lever", "Wheel and Axle", "Screw", "Wedge"], a: 1, cat: "Wheel and Axle" },
+        { q: "In a 2nd Class lever, what is located in the middle?", o: ["Fulcrum", "Effort", "Load", "Anchor"], a: 2, cat: "Lever" },
+        { q: "A spiral staircase is most similar to a:", o: ["Lever", "Screw", "Wedge", "Pulley"], a: 1, cat: "Screw" },
+        { q: "Which machine can be used to hold objects together?", o: ["Screw", "Wedge", "Lever", "Pulley"], a: 0, cat: "Screw" },
         { q: "Stairs are an example of an:", o: ["Inclined Plane", "Lever", "Pulley", "Wedge"], a: 0, cat: "Inclined Plane" },
-        { q: "A knife is a:", o: ["Lever", "Screw", "Wedge", "Pulley"], a: 2, cat: "Wedge" },
-        { q: "A crane uses which system to lift heavy loads?", o: ["Screw", "Block and Tackle", "Wedge", "Inclined Plane"], a: 1, cat: "Pulley" },
-        { q: "In a second-class lever, what is in the middle?", o: ["Fulcrum", "Effort", "Load", "Hand"], a: 2, cat: "Lever" },
-        { q: "Which machine reduces force by increasing distance?", o: ["All machines", "Pulleys only", "Screws only", "None"], a: 0, cat: "Basics" },
-        { q: "A steering wheel is a:", o: ["Lever", "Wheel and Axle", "Wedge", "Screw"], a: 1, cat: "Wheel and Axle" },
-        { q: "A screwdriver prying a lid is a:", o: ["Lever", "Screw", "Pulley", "Wedge"], a: 0, cat: "Lever" },
-        { q: "The thread of a bolt is an:", o: ["Inclined Plane", "Lever", "Pulley", "Wheel"], a: 0, cat: "Screw" },
-        { q: "Work is calculated as Force multiplied by _______.", o: ["Mass", "Distance", "Speed", "Time"], a: 1, cat: "Basics" }
+        { q: "A 'Block and Tackle' system consists of multiple:", o: ["Screws", "Pulleys", "Levers", "Wedges"], a: 1, cat: "Pulley" },
+        { q: "The 'Efficiency' of a machine is always less than:", o: ["50%", "100%", "200%", "10%"], a: 1, cat: "Basics" },
+        { q: "A pizza cutter uses which simple machine?", o: ["Screw", "Wheel and Axle", "Inclined Plane", "Lever"], a: 1, cat: "Wheel and Axle" },
+        { q: "Which machine has a 'fulcrum'?", o: ["Lever", "Wedge", "Screw", "Inclined Plane"], a: 0, cat: "Lever" },
+        { q: "What happens to effort as distance increases in a simple machine?", o: ["Increases", "Decreases", "Stays same", "Disappears"], a: 1, cat: "Basics" },
+        { q: "A crane uses pulleys to lift heavy loads by increasing:", o: ["Mass", "Mechanical Advantage", "Gravity", "Speed"], a: 1, cat: "Pulley" },
+        { q: "A bottle opener is an example of a:", o: ["Lever", "Screw", "Wedge", "Pulley"], a: 0, cat: "Lever" }
     ];
 
-    let currentIdx = 0;
+    let current = 0;
     let score = 0;
-    let selectedOption = null;
-    let errors = {};
+    let selected = null;
+    let history = [];
+    let catErrors = {};
 
     function startQuiz() {
         document.getElementById('setup-screen').classList.add('hidden');
         document.getElementById('quiz-screen').classList.remove('hidden');
-        renderQuestion();
+        showQuestion();
     }
 
-    function renderQuestion() {
-        const q = questions[currentIdx];
-        selectedOption = null;
-        
-        document.getElementById('q-count').innerText = `Question ${currentIdx + 1}/30`;
-        document.getElementById('question-text').innerText = q.q;
-        document.getElementById('progress-fill').style.width = `${((currentIdx) / 30) * 100}%`;
+    function showQuestion() {
+        selected = null;
+        const qData = questions[current];
+        document.getElementById('q-count').innerText = `Question ${current + 1} / 30`;
+        document.getElementById('progress-fill').style.width = `${(current / 30) * 100}%`;
+        document.getElementById('question-text').innerText = qData.q;
         
         const list = document.getElementById('options-list');
         list.innerHTML = '';
-        
-        q.o.forEach((opt, i) => {
+        qData.o.forEach((opt, i) => {
             const div = document.createElement('div');
             div.className = 'option-item';
-            div.innerHTML = `<span>${opt}</span>`;
-            div.onclick = () => selectOption(div, i);
+            div.innerHTML = `<b>${String.fromCharCode(65+i)}.</b> &nbsp; ${opt}`;
+            div.onclick = () => {
+                document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+                div.classList.add('selected');
+                selected = i;
+            };
             list.appendChild(div);
         });
     }
 
-    function selectOption(el, idx) {
-        document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedOption = idx;
-    }
+    function handleNext() {
+        if (selected === null) return alert("Please select an option!");
 
-    function submitAnswer() {
-        if (selectedOption === null) return alert("Please select an answer!");
-
-        if (selectedOption === questions[currentIdx].a) {
-            score++;
-        } else {
-            const cat = questions[currentIdx].cat;
-            errors[cat] = (errors[cat] || 0) + 1;
+        const q = questions[current];
+        const isCorrect = selected === q.a;
+        
+        if (isCorrect) score++;
+        else {
+            catErrors[q.cat] = (catErrors[q.cat] || 0) + 1;
         }
 
-        currentIdx++;
-        if (currentIdx < questions.length) {
-            renderQuestion();
-        } else {
-            showResults();
-        }
+        history.push({ q: q.q, correct: isCorrect, ans: q.o[q.a] });
+
+        current++;
+        if (current < 30) showQuestion();
+        else showResult();
     }
 
-    function showResults() {
+    function showResult() {
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
         
-        document.getElementById('display-gender').innerText = document.getElementById('gender-select').value;
+        document.getElementById('res-gender').innerText = document.getElementById('gender-select').value;
         document.getElementById('final-score').innerText = score;
 
-        let maxErrorCount = 0;
-        let worstCat = "";
-        for (let cat in errors) {
-            if (errors[cat] > maxErrorCount) {
-                maxErrorCount = errors[cat];
-                worstCat = cat;
-            }
+        // Find most errors
+        let worst = "None! You are a master.";
+        let max = 0;
+        for (let c in catErrors) {
+            if (catErrors[c] > max) { max = catErrors[c]; worst = c; }
         }
 
-        const analysis = document.getElementById('analysis-container');
-        if (maxErrorCount > 0) {
-            analysis.innerHTML = `<strong>Weakness Detected:</strong><br>You missed several questions in the <b>"${worstCat}"</b> category. We recommend focusing your studies there!`;
-        } else {
-            analysis.innerHTML = `<strong>Perfect!</strong><br>You have a solid understanding of all Simple Machines.`;
-        }
-    }
-</script>
-</body>
-</html>
-        });
-    }
-
-    function checkAnswer(selected, btn) {
-        const correct = quizData[currentIdx].correct;
-        const allOptions = document.querySelectorAll(".option");
-        allOptions.forEach(opt => opt.disabled = true);
+        let analysisHTML = `<strong>Most Frequent Errors:</strong> <span style="color:var(--error)">${worst}</span><br><hr>`;
+        analysisHTML += "<strong>Review (Correct Answers for missed ones):</strong><br>";
         
-        if(selected === correct) {
-            btn.classList.add("correct");
-            score++;
-        } else {
-            btn.classList.add("wrong");
-            allOptions[correct].classList.add("correct");
-        }
-        document.getElementById("next-btn").style.display = "block";
+        history.forEach((item, idx) => {
+            if (!item.correct) {
+                analysisHTML += `<div style="margin-bottom:10px; font-size:0.85rem;">
+                    <span style="color:var(--error)">✘ Q${idx+1}:</span> ${item.q}<br>
+                    <span style="color:var(--success)">✔ Correct Answer: ${item.ans}</span>
+                </div>`;
+            }
+        });
+        
+        document.getElementById('analysis-content').innerHTML = analysisHTML;
     }
-
-    function nextQuestion() {
-        currentIdx++;
-        if(currentIdx < quizData.length) {
-            loadQuiz();
-        } else {
-            showResults();
-        }
-    }
-
-    function showResults() {
-        const container = document.getElementById("quiz");
-        const percent = Math.round((score / quizData.length) * 100);
-        container.innerHTML = `
-            <div class="result-screen">
-                <div class="logo">Heetest</div>
-                <h2>Quiz Completed!</h2>
-                <div class="score-circle">${score} / ${quizData.length}</div>
-                <p>Your Score: <strong>${percent}%</strong></p>
-                <button onclick="location.reload()" class="option" style="text-align:center; width:200px; margin: 20px auto;">Try Again</button>
-            </div>
-        `;
-    }
-
-    loadQuiz();
 </script>
-
 </body>
 </html>
 
