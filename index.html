@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Master M.2 FINAL</title>
+    <title>Exam Master M.2 FINAL (Admin Mark Edition)</title>
     <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
     <style>
-        :root { --primary: #4361ee; --secondary: #3f37c9; --success: #00b894; --danger: #ff7675; --bg: #f8f9fa; --text: #2d3436; }
+        :root { --primary: #4361ee; --secondary: #3f37c9; --success: #00b894; --danger: #ff7675; --bg: #f8f9fa; --text: #2d3436; --admin: #6c5ce7; }
         * { box-sizing: border-box; font-family: 'Anuphan', sans-serif; }
         body { background-color: var(--bg); margin: 0; color: var(--text); }
         nav { background: #fff; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
@@ -16,9 +16,7 @@
         .card { background: #fff; border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom: 1.5rem; border: 1px solid rgba(0,0,0,0.02); }
         .btn { background: var(--primary); color: white; border: none; padding: 1rem; border-radius: 12px; cursor: pointer; font-size: 1rem; font-weight: 600; width: 100%; transition: 0.3s; }
         .btn:hover { background: var(--secondary); transform: translateY(-2px); }
-        .btn:disabled { background: #dfe6e9; cursor: not-allowed; }
         .option { width: 100%; text-align: left; padding: 1rem 1.5rem; margin: 0.5rem 0; border: 2px solid #f1f2f6; border-radius: 12px; background: #fff; cursor: pointer; font-size: 1rem; transition: 0.2s; }
-        .option:hover:not([disabled]) { border-color: var(--primary); background: #f8f9ff; }
         .correct { background: #e6fffb !important; border-color: var(--success) !important; color: var(--success) !important; font-weight: 600; }
         .wrong { background: #fff5f5 !important; border-color: var(--danger) !important; color: var(--danger) !important; }
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
@@ -28,46 +26,48 @@
         input[type="text"] { width: 100%; padding: 1rem; border-radius: 12px; border: 2px solid #dfe6e9; margin-bottom: 1rem; font-size: 1rem; }
         #progress-bar { height: 6px; background: #eee; border-radius: 10px; margin-bottom: 1.5rem; }
         #progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-        .sub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        .sub-item { background: #fff; padding: 1.5rem; border-radius: 15px; border: 1px solid #f1f2f6; cursor: pointer; transition: 0.3s; }
-        .sub-item:hover { border-color: var(--primary); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .comment-tag { background: #fff0f0; padding: 6px 14px; border-radius: 20px; border: 1px solid #ff7675; color: #d63031; font-weight: 600; font-size: 0.85rem; display: inline-block; margin: 4px; }
+        .comment-tag { background: #fff; padding: 6px 14px; border-radius: 20px; border: 1px solid #ff7675; color: #d63031; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; margin: 4px; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .del-btn { background: #ff7675; color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; display: none; line-height: 1; }
     </style>
 </head>
 <body>
 
 <nav>
-    <div style="font-weight: 700; font-size: 1.2rem; color: var(--primary);">EXAM MASTER</div>
+    <div style="font-weight: 700; font-size: 1.2rem; color: var(--primary);">EXAM MASTER <span id="admin-badge" style="color:var(--admin); font-size:0.8rem; display:none;">● ADMIN MODE</span></div>
     <div id="user-tag" class="hidden">👤 <span id="user-name" style="font-weight: 600;"></span></div>
 </nav>
 
 <div class="container">
     <div id="view-login" class="card" style="text-align: center;">
-        <h2>สวัสดีครับ ✌️</h2>
-        <p style="color: #636e72;">กรุณาใส่ชื่อเพื่อเริ่มสะสมประวัติการสอบ</p>
-        <input type="text" id="input-user" placeholder="ระบุชื่อ-นามสกุล">
-        <button class="btn" onclick="app.login()">เข้าสู่ระบบ</button>
+        <h2>ยินดีต้อนรับครับ ✌️</h2>
+        <input type="text" id="input-user" placeholder="ใส่ชื่อของคุณ (มาร์คพิมพ์ 'mark')">
+        <button class="btn" onclick="app.login()">เริ่มการสอบ</button>
     </div>
 
     <div id="view-menu" class="hidden">
-        <div class="card" style="border-left: 5px solid var(--primary);">
-            <h3 style="margin: 0 0 1rem 0;">📝 ประวัติล่าสุดของคุณ</h3>
-            <div id="history-list" style="font-size: 0.95rem; color: #636e72;">กำลังโหลด...</div>
+        <div id="admin-panel" class="card" style="border: 2px dashed var(--admin); display:none; background: #f3f0ff;">
+            <h3 style="color: var(--admin); margin: 0 0 10px 0;">🛠 Admin Mark: ควบคุมคะแนน</h3>
+            <button class="btn" style="background: var(--admin); font-size: 0.9rem;" onclick="app.clearScores()">ล้างคะแนนทั้งหมด</button>
         </div>
 
-        <h3 style="margin-bottom: 1rem;">เลือกวิชาที่ต้องการสอบ</h3>
-        <div class="sub-grid" id="menu-grid"></div>
+        <div class="card" style="border-left: 5px solid var(--primary);">
+            <h3 style="margin: 0 0 0.5rem 0;">📝 ประวัติล่าสุด</h3>
+            <div id="history-list" style="font-size: 0.9rem; color: #636e72;">ยังไม่มีข้อมูล</div>
+        </div>
+
+        <h3 style="margin-bottom: 1rem;">เลือกวิชาสอบ</h3>
+        <div id="menu-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"></div>
 
         <div class="card" style="margin-top: 2rem;">
-            <h3>🏆 อันดับคะแนนสูงสุด (TOP 10)</h3>
+            <h3>🏆 TOP 10 Score</h3>
             <table id="leader-table">
-                <thead><tr><th>ผู้สอบ</th><th>วิชา</th><th>คะแนน</th></tr></thead>
+                <thead><tr><th>ชื่อ</th><th>วิชา</th><th>คะแนน</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
 
         <div class="card" style="margin-top: 1.5rem; border-top: 4px solid #ff7675;">
-            <h3 style="color: #ff7675;">💬 ข้อความรั่วๆ จากเพื่อน</h3>
+            <h3 style="color: #ff7675; margin-top:0;">💬 ข้อความรั่วๆ (มาร์คลบทีละอันได้)</h3>
             <div id="public-comments"></div>
         </div>
     </div>
@@ -79,17 +79,17 @@
                 <span id="q-category" style="font-weight: 600; color: var(--primary);"></span>
                 <span id="q-count"></span>
             </div>
-            <h2 id="q-title" style="font-size: 1.2rem; margin-bottom: 1.5rem;"></h2>
+            <h2 id="q-title" style="font-size: 1.1rem; margin-bottom: 1.5rem;"></h2>
             
             <div id="input-area" class="hidden">
-                <p style="font-size: 0.8rem; color: var(--danger);">* พิมพ์คำตอบก่อนเลือกช้อยส์</p>
-                <input type="text" id="custom-answer" placeholder="พิมพ์สิ่งที่อยากตอบที่นี่..." style="border: 2px solid #ff7675;">
+                <p style="font-size: 0.8rem; color: var(--danger); font-weight:600;">* พิมพ์คำตอบก่อน แล้วค่อยกดเลือกช้อยส์ข้อสุดท้าย</p>
+                <input type="text" id="custom-answer" placeholder="อยากตอบอะไรพิมพ์เลย..." style="border: 2px solid #ff7675;">
             </div>
 
             <div id="opt-container"></div>
             <div style="margin-top: 2rem; display: flex; gap: 1rem;">
-                <button class="btn" style="background: #f1f2f6; color: #2d3436; width: 120px;" onclick="app.exit()">ออก</button>
-                <button id="btn-next" class="btn" onclick="app.next()" disabled>ถัดไป</button>
+                <button class="btn" style="background: #f1f2f6; color: #2d3436; width: 100px;" onclick="app.exit()">ออก</button>
+                <button id="btn-next" class="btn" onclick="app.next()" disabled>ข้อถัดไป</button>
             </div>
         </div>
     </div>
@@ -98,16 +98,14 @@
         <div class="card" style="text-align: center;">
             <h2 id="res-sub"></h2>
             <div class="score-box">
-                <span style="font-size: 3rem; font-weight: 700;" id="res-score"></span>
-                <span style="font-size: 0.9rem; opacity: 0.8;">คะแนนที่ได้</span>
+                <span style="font-size: 2.5rem; font-weight: 700;" id="res-score"></span>
             </div>
-            <button class="btn" onclick="app.showMenu()">กลับสู่หน้าหลัก</button>
+            <button class="btn" onclick="app.showMenu()">กลับหน้าหลัก</button>
         </div>
     </div>
 </div>
 
 <script>
-// Firebase Config - ห้ามเปลี่ยน
 const firebaseConfig = {
     apiKey: "AIzaSyAVAd78Y9OUKFdfkPsV96uj2IjFwWu1rAc",
     authDomain: "mark-d1f3f.firebaseapp.com",
@@ -120,7 +118,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// คำถามทั้งหมด (รวม 250 ข้อ)
 const quizData = {
     science: { title: "วิทยาศาสตร์ (60 ข้อ)", questions: [ 
         {q: "1. Which simple machine is used in a see-saw?", a: ["Lever", "Pulley", "Screw", "Wedge"], c: 0},
@@ -249,7 +246,7 @@ const quizData = {
     arts: { title: "นาฏศิลป์ (40 ข้อ)", questions: [ 
         {q: "1. การแสดงที่เน้นฝีมือผู้แสดงเพียงคนเดียวคือ?", a: ["รำคู่", "รำเดี่ยว", "รำหมู่", "รำละคร"], c: 1},
         {q: "2. รำฉุยฉาย จัดเป็นการแสดงประเภทใด?", a: ["รำเดี่ยว", "รำคู่", "รำหมู่", "ระบำ"], c: 0},
-        {q: "3. รรจนาเสี่ยงพวงมาลัย เป็นการรำประเภทใด?", a: ["รำเดี่ยว", "รำคู่แบบตัวพระ-นาง", "รำหมู่", "รำอาศิรวาท"], c: 1},
+        {q: "3. รรรจนาเสี่ยงพวงมาลัย เป็นการรำประเภทใด?", a: ["รำเดี่ยว", "รำคู่แบบตัวพระ-นาง", "รำหมู่", "รำอาศิรวาท"], c: 1},
         {q: "4. การรำหมู่มักใช้ผู้แสดงตั้งแต่กี่คนขึ้นไป?", a: ["1 คน", "2 คน", "3 คน", "10 คน"], c: 2},
         {q: "5. 'ระบำมาตรฐาน' จัดเป็นรำประเภทใด?", a: ["รำเดี่ยว", "รำคู่", "รำหมู่", "รำละคร"], c: 2},
         {q: "6. การแสดง 'รำวงมาตรฐาน' มีที่มาจากอะไร?", a: ["รำโทน", "รำเคียว", "รำบวงสรวง", "รำสีนวล"], c: 0},
@@ -387,12 +384,17 @@ const quizData = {
 };
 
 const app = {
-    user: '', currentSub: '', pool: [], idx: 0, score: 0, locked: false, tempVal: "",
+    user: '', isAdmin: false, currentSub: '', pool: [], idx: 0, score: 0, locked: false, tempVal: "",
 
     login() {
         const n = document.getElementById('input-user').value.trim();
-        if(!n) return alert("ใส่ชื่อด้วยนะ!");
+        if(!n) return alert("ระบุชื่อด้วย!");
         this.user = n;
+        if(n.toLowerCase() === 'mark') {
+            this.isAdmin = true;
+            document.getElementById('admin-badge').style.display = 'inline';
+            document.getElementById('admin-panel').style.display = 'block';
+        }
         document.getElementById('user-name').innerText = n;
         document.getElementById('user-tag').classList.remove('hidden');
         this.showMenu();
@@ -405,8 +407,8 @@ const app = {
         grid.innerHTML = "";
         for(let key in quizData) {
             const div = document.createElement('div');
-            div.className = 'sub-item';
-            div.innerHTML = `<strong>${quizData[key].title}</strong><br><small>${quizData[key].questions.length} ข้อ</small>`;
+            div.className = 'card'; div.style.cursor = 'pointer';
+            div.innerHTML = `<strong>${quizData[key].title}</strong><br><small style="color:#666">จำนวน ${quizData[key].questions.length} ข้อ</small>`;
             div.onclick = () => this.start(key);
             grid.appendChild(div);
         }
@@ -442,7 +444,7 @@ const app = {
             b.onclick = () => {
                 if(q.type === 'input' && i === 3) {
                     const val = document.getElementById('custom-answer').value.trim();
-                    if(!val) return alert("พิมพ์คำตอบลงในช่องด้วย!");
+                    if(!val) return alert("พิมพ์คำตอบลงในช่องก่อนกดเลือก 'อื่นๆ'!");
                     this.tempVal = val;
                 }
                 this.check(i, b);
@@ -466,6 +468,7 @@ const app = {
         if(this.tempVal) {
             db.ref('public_comments').push({ user: this.user, text: this.tempVal });
             this.tempVal = "";
+            document.getElementById('custom-answer').value = "";
         }
         this.idx++;
         if(this.idx < this.pool.length) this.render();
@@ -473,33 +476,54 @@ const app = {
     },
 
     finish() {
-        db.ref('scores').push({ name: this.user, subject: quizData[this.currentSub].title, score: this.score, total: this.pool.length, time: firebase.database.ServerValue.TIMESTAMP });
+        db.ref('scores').push({ name: this.user, subject: quizData[this.currentSub].title, score: this.score, total: this.pool.length });
         document.getElementById('res-sub').innerText = quizData[this.currentSub].title;
         document.getElementById('res-score').innerText = `${this.score} / ${this.pool.length}`;
         this.switchPage('result');
     },
 
+    // --- Admin Commands ---
+    clearScores() {
+        if(confirm("ล้างคะแนนทั้งหมดในระบบ?")) db.ref('scores').remove();
+    },
+    deleteMsg(key) {
+        if(confirm("ลบข้อความนี้?")) db.ref('public_comments/' + key).remove();
+    },
+    // ----------------------
+
     sync() {
         db.ref('scores').on('value', snap => {
-            const data = snap.val(); if(!data) return;
-            const all = Object.values(data);
+            const data = snap.val() ? Object.values(snap.val()) : [];
             const tbody = document.querySelector('#leader-table tbody');
             tbody.innerHTML = "";
-            [...all].sort((a,b) => b.score - a.score).slice(0, 10).forEach(i => {
+            [...data].sort((a,b) => b.score - a.score).slice(0, 10).forEach(i => {
                 tbody.innerHTML += `<tr><td>${i.name}</td><td>${i.subject}</td><td>${i.score}/${i.total}</td></tr>`;
             });
-            const my = all.filter(i => i.name === this.user).reverse();
-            document.getElementById('history-list').innerHTML = my.length ? "" : "ยังไม่มีข้อมูล";
+            const my = data.filter(i => i.name === this.user).reverse();
+            document.getElementById('history-list').innerHTML = my.length ? "" : "ไม่มีประวัติ";
             my.slice(0, 3).forEach(i => {
-                document.getElementById('history-list').innerHTML += `<div style="margin-bottom:5px;">${i.subject}: <b>${i.score}/${i.total}</b></div>`;
+                document.getElementById('history-list').innerHTML += `<div>${i.subject}: <b>${i.score}/${i.total}</b></div>`;
             });
         });
-        db.ref('public_comments').limitToLast(10).on('value', snap => {
-            const comms = snap.val(); if(!comms) return;
+
+        db.ref('public_comments').on('value', snap => {
+            const comms = snap.val();
             const div = document.getElementById('public-comments');
             div.innerHTML = "";
-            Object.values(comms).reverse().forEach(c => {
-                div.innerHTML += `<span class="comment-tag">${c.user}: ${c.text}</span>`;
+            if(comms) Object.keys(comms).reverse().forEach(key => {
+                const c = comms[key];
+                const span = document.createElement('span');
+                span.className = 'comment-tag';
+                span.innerHTML = `<span>${c.user}: ${c.text}</span>`;
+                
+                const del = document.createElement('button');
+                del.className = 'del-btn';
+                del.innerText = 'X';
+                del.onclick = () => this.deleteMsg(key);
+                if(this.isAdmin) del.style.display = 'block';
+                
+                span.appendChild(del);
+                div.appendChild(span);
             });
         });
     },
