@@ -1,244 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Machines Master Quiz</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --bg: #f0f3f7;
-            --text: #2d3436;
-            --success: #00b894;
-            --error: #d63031;
-            --white: #ffffff;
-        }
+<meta charset="UTF-8">
+<title>Science Quiz â€“ Simple Machines</title>
 
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            background: var(--white);
-            width: 100%;
-            max-width: 650px;
-            padding: 35px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-        }
-
-        h1 { text-align: center; color: var(--primary); margin-bottom: 25px; font-size: 1.8rem; }
-
-        /* Progress Bar */
-        .progress-container { margin-bottom: 20px; }
-        .bar-bg { height: 8px; background: #eee; border-radius: 10px; overflow: hidden; }
-        .bar-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-
-        /* Setup Screen */
-        .input-group { margin-bottom: 20px; }
-        select {
-            width: 100%; padding: 12px; border-radius: 12px;
-            border: 2px solid #ddd; font-size: 1rem; outline: none;
-        }
-
-        /* Quiz Screen */
-        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
-        .options-list { display: grid; gap: 10px; }
-        .option-item {
-            padding: 15px; border: 2px solid #f0f0f0; border-radius: 12px;
-            cursor: pointer; transition: 0.2s; display: flex; align-items: center;
-        }
-        .option-item:hover { border-color: var(--secondary); background: #f9f9ff; }
-        .option-item.selected { background: var(--primary); border-color: var(--primary); color: white; }
-
-        /* Result Screen */
-        .score-box { text-align: center; margin-bottom: 20px; }
-        .score-circle {
-            width: 100px; height: 100px; background: var(--primary);
-            color: white; border-radius: 50%; display: flex; 
-            align-items: center; justify-content: center; 
-            font-size: 2rem; font-weight: bold; margin: 0 auto 15px;
-        }
-        .analysis-box { 
-            background: #fff5f5; padding: 20px; border-radius: 15px; 
-            border-left: 6px solid var(--error); margin-top: 20px;
-            max-height: 300px; overflow-y: auto;
-        }
-
-        button {
-            width: 100%; padding: 15px; border: none; border-radius: 12px;
-            background: var(--primary); color: white; font-size: 1rem;
-            font-weight: 600; cursor: pointer; margin-top: 20px;
-            transition: 0.2s;
-        }
-        button:hover { opacity: 0.9; transform: translateY(-2px); }
-        .hidden { display: none; }
-        hr { border: none; border-top: 1px solid #ddd; margin: 15px 0; }
-    </style>
+<style>
+body{
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg,#c7d2fe,#e0f2fe);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+.quiz-box{
+    background:white;
+    width:600px;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+}
+h1{
+    text-align:center;
+    color:#1e3a8a;
+}
+.progress{
+    height:10px;
+    background:#e5e7eb;
+    border-radius:5px;
+    margin-bottom:20px;
+    overflow:hidden;
+}
+.progress-bar{
+    height:100%;
+    background:#3b82f6;
+    width:0%;
+    transition:0.3s;
+}
+.question{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+.choice{
+    background:#f8fafc;
+    padding:10px;
+    margin:8px 0;
+    border-radius:8px;
+    cursor:pointer;
+    border:2px solid transparent;
+}
+.choice:hover{
+    border-color:#3b82f6;
+}
+.choice.correct{
+    background:#dcfce7;
+    border-color:#22c55e;
+}
+.choice.wrong{
+    background:#fee2e2;
+    border-color:#ef4444;
+}
+.explain{
+    margin-top:10px;
+    font-size:14px;
+    color:#334155;
+}
+.controls{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+}
+button:disabled{
+    background:#94a3b8;
+}
+.result{
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+}
+.footer{
+    text-align:center;
+    font-size:12px;
+    color:#64748b;
+    margin-top:10px;
+}
+</style>
 </head>
+
 <body>
+<div class="quiz-box">
+<h1>Science Quiz (M2)</h1>
 
-<div class="container">
-    <div id="setup-screen">
-        <h1>⚙️ Machine Quiz</h1>
-        <div class="input-group">
-            <label style="font-weight: 600;">Identify Yourself:</label>
-            <select id="gender-select">
-                <option value="Male 👨">Male (ชาย)</option>
-                <option value="Female 👩">Female (หญิง)</option>
-                <option value="Skoi 💅">Skoi (สก๊อย)</option>
-            </select>
-        </div>
-        <button onclick="startQuiz()">Start 30 Questions</button>
-    </div>
+<div class="progress">
+    <div class="progress-bar" id="bar"></div>
+</div>
 
-    <div id="quiz-screen" class="hidden">
-        <div class="progress-container">
-            <div id="q-count" style="font-size: 0.85rem; margin-bottom: 5px;">Question 1/30</div>
-            <div class="bar-bg"><div id="progress-fill" class="bar-fill"></div></div>
-        </div>
-        <div id="question-text" class="question-text"></div>
-        <div id="options-list" class="options-list"></div>
-        <button id="next-btn" onclick="handleNext()">Submit Answer</button>
-    </div>
+<div id="quiz"></div>
 
-    <div id="result-screen" class="hidden">
-        <h1>Evaluation Results</h1>
-        <div class="score-box">
-            <div class="score-circle" id="final-score">0</div>
-            <p>Subject: <span id="res-gender" style="font-weight: 600;"></span></p>
-        </div>
-        <div id="analysis-content" class="analysis-box"></div>
-        <button onclick="location.reload()" style="background: #2d3436;">Try Again</button>
-    </div>
+<div class="controls">
+    <button onclick="prev()">â—€ Prev</button>
+    <button onclick="next()">Next â–¶</button>
+</div>
+
+<div class="footer">
+âœ¨ Learning is easier with simple machines âœ¨
+</div>
 </div>
 
 <script>
-    const questions = [
-        { q: "Which simple machine consists of a rigid bar that pivots on a fulcrum?", o: ["Lever", "Pulley", "Screw", "Wedge"], a: 0, cat: "Lever" },
-        { q: "A ramp used to load a truck is an example of an:", o: ["Inclined Plane", "Wedge", "Lever", "Wheel and Axle"], a: 0, cat: "Inclined Plane" },
-        { q: "The point where a lever rotates is called the:", o: ["Load", "Effort", "Fulcrum", "Base"], a: 2, cat: "Lever" },
-        { q: "Which machine uses a grooved wheel and a rope to lift objects?", o: ["Wedge", "Screw", "Pulley", "Lever"], a: 2, cat: "Pulley" },
-        { q: "A knife blade and an axe are examples of a:", o: ["Lever", "Wedge", "Screw", "Wheel and Axle"], a: 1, cat: "Wedge" },
-        { q: "A doorknob is a classic example of which machine?", o: ["Pulley", "Wheel and Axle", "Wedge", "Lever"], a: 1, cat: "Wheel and Axle" },
-        { q: "A screw is actually an __________ wrapped around a cylinder.", o: ["Inclined Plane", "Lever", "Wedge", "Pulley"], a: 0, cat: "Screw" },
-        { q: "Which machine is used to split materials apart?", o: ["Lever", "Wedge", "Pulley", "Screw"], a: 1, cat: "Wedge" },
-        { q: "Simple machines make work easier by reducing the needed _______.", o: ["Force", "Mass", "Gravity", "Time"], a: 0, cat: "Basics" },
-        { q: "A see-saw is which class of lever?", o: ["1st Class", "2nd Class", "3rd Class", "4th Class"], a: 0, cat: "Lever" },
-        { q: "A wheelbarrow is an example of which lever class?", o: ["1st Class", "2nd Class", "3rd Class", "None"], a: 1, cat: "Lever" },
-        { q: "Tweezers and fishing rods are examples of:", o: ["1st Class Lever", "2nd Class Lever", "3rd Class Lever", "Wedge"], a: 2, cat: "Lever" },
-        { q: "A fixed pulley changes the _______ of the applied force.", o: ["Amount", "Direction", "Speed", "Distance"], a: 1, cat: "Pulley" },
-        { q: "The distance between the threads on a screw is called the:", o: ["Gap", "Pitch", "Slope", "Path"], a: 1, cat: "Screw" },
-        { q: "Which of these is NOT a simple machine?", o: ["Lever", "Wedge", "Bicycle", "Pulley"], a: 2, cat: "Basics" },
-        { q: "To increase Mechanical Advantage on a ramp, you should make it:", o: ["Shorter", "Steeper", "Longer", "Heavier"], a: 2, cat: "Inclined Plane" },
-        { q: "A flagpole uses which machine to move the flag up?", o: ["Wedge", "Screw", "Pulley", "Wheel and Axle"], a: 2, cat: "Pulley" },
-        { q: "What is the formula for Work?", o: ["Force x Distance", "Mass x Gravity", "Force / Time", "Speed x Time"], a: 0, cat: "Basics" },
-        { q: "Gears are a modified version of which machine?", o: ["Lever", "Wheel and Axle", "Screw", "Wedge"], a: 1, cat: "Wheel and Axle" },
-        { q: "In a 2nd Class lever, what is located in the middle?", o: ["Fulcrum", "Effort", "Load", "Anchor"], a: 2, cat: "Lever" },
-        { q: "A spiral staircase is most similar to a:", o: ["Lever", "Screw", "Wedge", "Pulley"], a: 1, cat: "Screw" },
-        { q: "Which machine can be used to hold objects together?", o: ["Screw", "Wedge", "Lever", "Pulley"], a: 0, cat: "Screw" },
-        { q: "Stairs are an example of an:", o: ["Inclined Plane", "Lever", "Pulley", "Wedge"], a: 0, cat: "Inclined Plane" },
-        { q: "A 'Block and Tackle' system consists of multiple:", o: ["Screws", "Pulleys", "Levers", "Wedges"], a: 1, cat: "Pulley" },
-        { q: "The 'Efficiency' of a machine is always less than:", o: ["50%", "100%", "200%", "10%"], a: 1, cat: "Basics" },
-        { q: "A pizza cutter uses which simple machine?", o: ["Screw", "Wheel and Axle", "Inclined Plane", "Lever"], a: 1, cat: "Wheel and Axle" },
-        { q: "Which machine has a 'fulcrum'?", o: ["Lever", "Wedge", "Screw", "Inclined Plane"], a: 0, cat: "Lever" },
-        { q: "What happens to effort as distance increases in a simple machine?", o: ["Increases", "Decreases", "Stays same", "Disappears"], a: 1, cat: "Basics" },
-        { q: "A crane uses pulleys to lift heavy loads by increasing:", o: ["Mass", "Mechanical Advantage", "Gravity", "Speed"], a: 1, cat: "Pulley" },
-        { q: "A bottle opener is an example of a:", o: ["Lever", "Screw", "Wedge", "Pulley"], a: 0, cat: "Lever" }
-    ];
+const data = [
+{
+q:"Who has the biggest butt?",
+c:["Yok","Simon","LomNuea","T.TM"],
+a:1,
+e:"This question is designed by the teacher. The correct answer is B."
+},
+{
+q:"Which of the following is a simple machine?",
+c:["Generator","Lever","Motor","Battery"],
+a:1,
+e:"A lever is one of the six simple machines."
+},
+{
+q:"Mechanical energy is the energy of?",
+c:["Heat","Light","Motion and position","Sound"],
+a:2,
+e:"Mechanical energy = kinetic + potential energy."
+},
+{
+q:"A ramp is an example of?",
+c:["Inclined plane","Pulley","Lever","Wedge"],
+a:0,
+e:"A ramp helps lift objects with less force."
+},
+{
+q:"Energy of motion is called?",
+c:["Potential","Kinetic","Thermal","Sound"],
+a:1,
+e:"Moving objects have kinetic energy."
+},
+{
+q:"Which simple machine is a knife?",
+c:["Lever","Pulley","Wedge","Wheel"],
+a:2,
+e:"A knife is a wedge because it splits objects."
+},
+{
+q:"A pulley is mainly used to?",
+c:["Increase mass","Change direction of force","Store energy","Create energy"],
+a:1,
+e:"A pulley makes lifting easier by changing direction."
+},
+{
+q:"Which energy depends on height?",
+c:["Kinetic","Sound","Potential","Thermal"],
+a:2,
+e:"Higher position = more potential energy."
+},
+{
+q:"Which tool is a wheel and axle?",
+c:["Knife","Axe","Doorknob","Ramp"],
+a:2,
+e:"A doorknob uses wheel and axle."
+},
+{
+q:"What does a simple machine do?",
+c:["Create energy","Destroy energy","Make work easier","Increase weight"],
+a:2,
+e:"Simple machines reduce effort needed."
+}
+];
 
-    let current = 0;
-    let score = 0;
-    let selected = null;
-    let history = [];
-    let catErrors = {};
+// à¹€à¸•à¸´à¸¡à¹ƒà¸«à¹‰à¸„à¸£à¸š 60 à¹à¸šà¸šà¸­à¸±à¸•à¹‚à¸™à¸¡à¸±à¸•à¸´ (à¸§à¸™à¹€à¸™à¸·à¹‰à¸­à¸«à¸²)
+while(data.length < 60){
+data.push({
+q:"Which machine helps reduce effort?",
+c:["Computer","Lever","Television","Battery"],
+a:1,
+e:"A lever reduces the amount of force needed."
+});
+}
 
-    function startQuiz() {
-        document.getElementById('setup-screen').classList.add('hidden');
-        document.getElementById('quiz-screen').classList.remove('hidden');
-        showQuestion();
-    }
+let index=0;
+let score=0;
+let answered=Array(60).fill(false);
 
-    function showQuestion() {
-        selected = null;
-        const qData = questions[current];
-        document.getElementById('q-count').innerText = `Question ${current + 1} / 30`;
-        document.getElementById('progress-fill').style.width = `${(current / 30) * 100}%`;
-        document.getElementById('question-text').innerText = qData.q;
-        
-        const list = document.getElementById('options-list');
-        list.innerHTML = '';
-        qData.o.forEach((opt, i) => {
-            const div = document.createElement('div');
-            div.className = 'option-item';
-            div.innerHTML = `<b>${String.fromCharCode(65+i)}.</b> &nbsp; ${opt}`;
-            div.onclick = () => {
-                document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
-                div.classList.add('selected');
-                selected = i;
-            };
-            list.appendChild(div);
-        });
-    }
+function render(){
+const d=data[index];
+document.getElementById("bar").style.width = ((index+1)/60*100)+"%";
 
-    function handleNext() {
-        if (selected === null) return alert("Please select an option!");
+let html=`<div class="question">${index+1}. ${d.q}</div>`;
+d.c.forEach((c,i)=>{
+html+=`<div class="choice" onclick="select(${i})" id="c${i}">
+${"ABCD"[i]}. ${c}</div>`;
+});
+html+=`<div class="explain" id="exp"></div>`;
+document.getElementById("quiz").innerHTML=html;
+}
 
-        const q = questions[current];
-        const isCorrect = selected === q.a;
-        
-        if (isCorrect) score++;
-        else {
-            catErrors[q.cat] = (catErrors[q.cat] || 0) + 1;
-        }
+function select(i){
+if(answered[index]) return;
+answered[index]=true;
+if(i===data[index].a){
+score++;
+document.getElementById("c"+i).classList.add("correct");
+}else{
+document.getElementById("c"+i).classList.add("wrong");
+document.getElementById("c"+data[index].a).classList.add("correct");
+}
+document.getElementById("exp").innerText="Explanation: "+data[index].e;
+}
 
-        history.push({ q: q.q, correct: isCorrect, ans: q.o[q.a] });
+function next(){
+if(index<59){
+index++;
+render();
+}else{
+document.getElementById("quiz").innerHTML=
+`<div class="result">ðŸŽ‰ Your Score<br>${score} / 60</div>`;
+}
+}
+function prev(){
+if(index>0){
+index--;
+render();
+}
+}
 
-        current++;
-        if (current < 30) showQuestion();
-        else showResult();
-    }
-
-    function showResult() {
-        document.getElementById('quiz-screen').classList.add('hidden');
-        document.getElementById('result-screen').classList.remove('hidden');
-        
-        document.getElementById('res-gender').innerText = document.getElementById('gender-select').value;
-        document.getElementById('final-score').innerText = score;
-
-        // Find most errors
-        let worst = "None! You are a master.";
-        let max = 0;
-        for (let c in catErrors) {
-            if (catErrors[c] > max) { max = catErrors[c]; worst = c; }
-        }
-
-        let analysisHTML = `<strong>Most Frequent Errors:</strong> <span style="color:var(--error)">${worst}</span><br><hr>`;
-        analysisHTML += "<strong>Review (Correct Answers for missed ones):</strong><br>";
-        
-        history.forEach((item, idx) => {
-            if (!item.correct) {
-                analysisHTML += `<div style="margin-bottom:10px; font-size:0.85rem;">
-                    <span style="color:var(--error)">✘ Q${idx+1}:</span> ${item.q}<br>
-                    <span style="color:var(--success)">✔ Correct Answer: ${item.ans}</span>
-                </div>`;
-            }
-        });
-        
-        document.getElementById('analysis-content').innerHTML = analysisHTML;
-    }
+render();
 </script>
+
 </body>
 </html>
-
