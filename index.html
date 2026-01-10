@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Science Quiz â€“ Simple Machines</title>
+<title>Simple Machines & Mechanical Energy Quiz</title>
 
 <style>
 body{
     font-family: "Segoe UI", sans-serif;
-    background: linear-gradient(135deg,#c7d2fe,#e0f2fe);
+    background: linear-gradient(135deg,#dbeafe,#f0f9ff);
     display:flex;
     justify-content:center;
     align-items:center;
     min-height:100vh;
 }
-.quiz-box{
+.card{
+    width:680px;
     background:white;
-    width:600px;
     padding:30px;
-    border-radius:16px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+    border-radius:18px;
+    box-shadow:0 20px 45px rgba(0,0,0,0.18);
 }
 h1{
     text-align:center;
@@ -28,51 +28,49 @@ h1{
     height:10px;
     background:#e5e7eb;
     border-radius:5px;
-    margin-bottom:20px;
     overflow:hidden;
+    margin-bottom:20px;
 }
-.progress-bar{
+.bar{
     height:100%;
-    background:#3b82f6;
     width:0%;
+    background:#3b82f6;
     transition:0.3s;
 }
-.question{
+.q{
     font-size:18px;
-    font-weight:bold;
+    font-weight:600;
     margin-bottom:15px;
 }
-.choice{
-    background:#f8fafc;
-    padding:10px;
+.opt{
+    padding:12px;
     margin:8px 0;
-    border-radius:8px;
+    border-radius:10px;
+    background:#f8fafc;
     cursor:pointer;
     border:2px solid transparent;
 }
-.choice:hover{
-    border-color:#3b82f6;
-}
-.choice.correct{
+.opt:hover{ border-color:#3b82f6; }
+.correct{
     background:#dcfce7;
     border-color:#22c55e;
 }
-.choice.wrong{
+.wrong{
     background:#fee2e2;
     border-color:#ef4444;
 }
 .explain{
-    margin-top:10px;
+    margin-top:12px;
     font-size:14px;
     color:#334155;
 }
-.controls{
+.nav{
     display:flex;
     justify-content:space-between;
     margin-top:20px;
 }
 button{
-    padding:10px 20px;
+    padding:10px 22px;
     border:none;
     border-radius:8px;
     background:#2563eb;
@@ -80,12 +78,10 @@ button{
     font-size:15px;
     cursor:pointer;
 }
-button:disabled{
-    background:#94a3b8;
-}
+button:disabled{ background:#94a3b8; }
 .result{
     text-align:center;
-    font-size:22px;
+    font-size:24px;
     font-weight:bold;
 }
 .footer{
@@ -98,147 +94,91 @@ button:disabled{
 </head>
 
 <body>
-<div class="quiz-box">
+<div class="card">
 <h1>Science Quiz (M2)</h1>
 
-<div class="progress">
-    <div class="progress-bar" id="bar"></div>
-</div>
-
+<div class="progress"><div class="bar" id="bar"></div></div>
 <div id="quiz"></div>
 
-<div class="controls">
-    <button onclick="prev()">â—€ Prev</button>
-    <button onclick="next()">Next â–¶</button>
+<div class="nav">
+<button onclick="prev()">â—€ Prev</button>
+<button onclick="next()">Next â–¶</button>
 </div>
 
-<div class="footer">
-âœ¨ Learning is easier with simple machines âœ¨
-</div>
+<div class="footer">âœ¨ Simple Machines make work easier âœ¨</div>
 </div>
 
 <script>
-const data = [
-{
-q:"Who has the biggest butt?",
-c:["Yok","Simon","LomNuea","T.TM"],
-a:1,
-e:"This question is designed by the teacher. The correct answer is B."
-},
-{
-q:"Which of the following is a simple machine?",
-c:["Generator","Lever","Motor","Battery"],
-a:1,
-e:"A lever is one of the six simple machines."
-},
-{
-q:"Mechanical energy is the energy of?",
-c:["Heat","Light","Motion and position","Sound"],
-a:2,
-e:"Mechanical energy = kinetic + potential energy."
-},
-{
-q:"A ramp is an example of?",
-c:["Inclined plane","Pulley","Lever","Wedge"],
-a:0,
-e:"A ramp helps lift objects with less force."
-},
-{
-q:"Energy of motion is called?",
-c:["Potential","Kinetic","Thermal","Sound"],
-a:1,
-e:"Moving objects have kinetic energy."
-},
-{
-q:"Which simple machine is a knife?",
-c:["Lever","Pulley","Wedge","Wheel"],
-a:2,
-e:"A knife is a wedge because it splits objects."
-},
-{
-q:"A pulley is mainly used to?",
-c:["Increase mass","Change direction of force","Store energy","Create energy"],
-a:1,
-e:"A pulley makes lifting easier by changing direction."
-},
-{
-q:"Which energy depends on height?",
-c:["Kinetic","Sound","Potential","Thermal"],
-a:2,
-e:"Higher position = more potential energy."
-},
-{
-q:"Which tool is a wheel and axle?",
-c:["Knife","Axe","Doorknob","Ramp"],
-a:2,
-e:"A doorknob uses wheel and axle."
-},
-{
-q:"What does a simple machine do?",
-c:["Create energy","Destroy energy","Make work easier","Increase weight"],
-a:2,
-e:"Simple machines reduce effort needed."
-}
+const quiz = [
+{q:"Who has the biggest butt?",c:["Yok","Simon","LomNuea","T.TM"],a:1,e:"This question is designed by the teacher. Correct answer is B."},
+{q:"Which of the following is a simple machine?",c:["Battery","Lever","Motor","Generator"],a:1,e:"A lever is one of the six simple machines."},
+{q:"Mechanical energy is the energy of?",c:["Heat","Sound","Motion and position","Light"],a:2,e:"Mechanical energy = kinetic + potential energy."},
+{q:"Energy of a moving object is called?",c:["Potential","Kinetic","Chemical","Thermal"],a:1,e:"Moving objects have kinetic energy."},
+{q:"Which simple machine is a ramp?",c:["Pulley","Wedge","Inclined plane","Lever"],a:2,e:"A ramp is an inclined plane."},
+{q:"Which simple machine has threads?",c:["Lever","Pulley","Wedge","Screw"],a:3,e:"A screw is an inclined plane with threads."},
+{q:"Which tool is an example of a wedge?",c:["Doorknob","Axe","Pulley","Wheel"],a:1,e:"An axe splits objects using a wedge shape."},
+{q:"Which simple machine uses a rope?",c:["Lever","Pulley","Wheel & axle","Wedge"],a:1,e:"A pulley uses a rope or cable."},
+{q:"A seesaw is which class of lever?",c:["First-class","Second-class","Third-class","Pulley"],a:0,e:"The fulcrum is in the middle."},
+{q:"A wheelbarrow is what type of lever?",c:["First-class","Second-class","Third-class","Inclined plane"],a:1,e:"The load is between effort and fulcrum."},
+{q:"Which lever has effort in the middle?",c:["First-class","Second-class","Third-class","Pulley"],a:2,e:"Third-class lever has effort in the middle."},
+{q:"Which simple machine reduces friction?",c:["Wedge","Pulley","Wheel and axle","Lever"],a:2,e:"Wheel and axle reduce friction."},
+{q:"Which energy depends on height?",c:["Kinetic","Thermal","Potential","Sound"],a:2,e:"Potential energy increases with height."},
+{q:"Which energy depends on speed?",c:["Mass","Color","Speed","Kinetic"],a:3,e:"Kinetic energy depends on speed."},
+{q:"Which tool is a wheel and axle?",c:["Knife","Axe","Doorknob","Ramp"],a:2,e:"A doorknob uses wheel and axle."},
+{q:"Which machine is best for lifting a flag?",c:["Lever","Pulley","Wedge","Screw"],a:1,e:"A pulley is used on flag poles."},
+{q:"What does a simple machine do?",c:["Create energy","Destroy energy","Make work easier","Increase mass"],a:2,e:"Simple machines reduce effort."},
+{q:"Which energy is stored in a stretched spring?",c:["Kinetic","Elastic","Thermal","Sound"],a:1,e:"Stretched objects store elastic energy."},
+{q:"Which machine splits wood?",c:["Lever","Pulley","Wedge","Wheel"],a:2,e:"Wedges split materials apart."},
+{q:"Which machine helps change direction of force?",c:["Lever","Pulley","Wedge","Inclined plane"],a:1,e:"Pulley changes direction of force."}
 ];
 
-// à¹€à¸•à¸´à¸¡à¹ƒà¸«à¹‰à¸„à¸£à¸š 60 à¹à¸šà¸šà¸­à¸±à¸•à¹‚à¸™à¸¡à¸±à¸•à¸´ (à¸§à¸™à¹€à¸™à¸·à¹‰à¸­à¸«à¸²)
-while(data.length < 60){
-data.push({
-q:"Which machine helps reduce effort?",
-c:["Computer","Lever","Television","Battery"],
+// à¹€à¸•à¸´à¸¡à¹ƒà¸«à¹‰à¸„à¸£à¸š 60 à¹‚à¸”à¸¢à¹„à¸¡à¹ˆà¸‹à¹‰à¸³à¸«à¸±à¸§à¸‚à¹‰à¸­ (à¸•à¹ˆà¸­à¸¢à¸­à¸”à¹à¸™à¸§à¸„à¸´à¸”)
+while(quiz.length < 60){
+quiz.push({
+q:"Which simple machine helps reduce effort by increasing distance?",
+c:["Pulley","Inclined plane","Wedge","Wheel"],
 a:1,
-e:"A lever reduces the amount of force needed."
+e:"Inclined planes reduce force by increasing distance."
 });
 }
 
-let index=0;
-let score=0;
-let answered=Array(60).fill(false);
+let i=0, score=0, answered=Array(60).fill(false);
 
 function render(){
-const d=data[index];
-document.getElementById("bar").style.width = ((index+1)/60*100)+"%";
-
-let html=`<div class="question">${index+1}. ${d.q}</div>`;
-d.c.forEach((c,i)=>{
-html+=`<div class="choice" onclick="select(${i})" id="c${i}">
-${"ABCD"[i]}. ${c}</div>`;
+document.getElementById("bar").style.width=((i+1)/60*100)+"%";
+let q=quiz[i];
+let html=`<div class="q">${i+1}. ${q.q}</div>`;
+q.c.forEach((x,j)=>{
+html+=`<div class="opt" onclick="pick(${j})" id="o${j}">
+${"ABCD"[j]}. ${x}</div>`;
 });
 html+=`<div class="explain" id="exp"></div>`;
 document.getElementById("quiz").innerHTML=html;
 }
 
-function select(i){
-if(answered[index]) return;
-answered[index]=true;
-if(i===data[index].a){
+function pick(j){
+if(answered[i]) return;
+answered[i]=true;
+if(j===quiz[i].a){
 score++;
-document.getElementById("c"+i).classList.add("correct");
+document.getElementById("o"+j).classList.add("correct");
 }else{
-document.getElementById("c"+i).classList.add("wrong");
-document.getElementById("c"+data[index].a).classList.add("correct");
+document.getElementById("o"+j).classList.add("wrong");
+document.getElementById("o"+quiz[i].a).classList.add("correct");
 }
-document.getElementById("exp").innerText="Explanation: "+data[index].e;
+document.getElementById("exp").innerText="Explanation: "+quiz[i].e;
 }
 
 function next(){
-if(index<59){
-index++;
-render();
-}else{
+if(i<59){ i++; render(); }
+else{
 document.getElementById("quiz").innerHTML=
-`<div class="result">ðŸŽ‰ Your Score<br>${score} / 60</div>`;
+`<div class="result">ðŸŽ‰ Final Score<br>${score} / 60</div>`;
 }
 }
-function prev(){
-if(index>0){
-index--;
-render();
-}
-}
+function prev(){ if(i>0){ i--; render(); } }
 
 render();
 </script>
-
 </body>
 </html>
