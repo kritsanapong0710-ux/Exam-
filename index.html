@@ -3,445 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Master M.2 FINAL (MARK EDITION)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+    <title>MARK PARTY 200 QUESTIONS - FULL EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        :root { --primary: #4361ee; --secondary: #3f37c9; --success: #00b894; --danger: #ff7675; --bg: #f8f9fa; --text: #2d3436; --admin: #6c5ce7; }
-        * { box-sizing: border-box; font-family: 'Anuphan', sans-serif; }
-        body { background-color: var(--bg); margin: 0; color: var(--text); overflow-x: hidden; transition: background 0.5s ease; }
+        :root { --gp-yellow: #ffde59; --gp-blue: #5de0e6; --gp-gray: #3d3d3d; --gp-white: #ffffff; }
+        body { background: var(--gp-blue); font-family: 'Anuphan', sans-serif; margin: 0; }
+        .container { max-width: 900px; margin: auto; padding: 20px; }
+        .card { background: var(--gp-white); border: 5px solid var(--gp-gray); border-radius: 30px; padding: 30px; box-shadow: 10px 10px 0 var(--gp-gray); text-align: center; position: relative; }
         
-        /* Gartic Phone Style Animation */
-        @keyframes gartic-bg {
-            0% { background-color: #ff7675; }
-            25% { background-color: #fdcb6e; }
-            50% { background-color: #55efc4; }
-            75% { background-color: #74b9ff; }
-            100% { background-color: #a29bfe; }
-        }
-        .gamemode-active { animation: gartic-bg 10s infinite alternate !important; }
-
-        #effect-overlay { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index: 9999; display:none; }
-        .ink-splat { position: absolute; width: 300px; filter: contrast(150%); }
-        .flash-bang { position: fixed; top:0; left:0; width:100%; height:100%; background: white; }
-        .glitch-effect { animation: glitch-anim 0.2s infinite; }
-        @keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-5px, 5px); } 40% { transform: translate(-5px, -5px); } 60% { transform: translate(5px, 5px); } 80% { transform: translate(5px, -5px); } 100% { transform: translate(0); } }
-        .freeze-overlay { border: 10px solid #00d2ff; background: rgba(0, 210, 255, 0.1); }
+        /* Gartic Phone Style */
+        .btn-gp { padding: 15px 25px; border: 3px solid var(--gp-gray); border-radius: 20px; font-family: 'Gaegu'; font-size: 1.5rem; font-weight: 700; cursor: pointer; transition: 0.2s; margin: 5px; }
+        .btn-gp:hover { transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--gp-gray); }
+        .btn-yellow { background: var(--gp-yellow); }
         
-        nav { background: #fff; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; position: relative; }
-        .card { background: #fff; border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom: 1.5rem; border: 1px solid rgba(0,0,0,0.02); }
-        .btn { background: var(--primary); color: white; border: none; padding: 1rem; border-radius: 12px; cursor: pointer; font-size: 1rem; font-weight: 600; width: 100%; transition: 0.3s; margin-bottom: 10px; }
-        .option { width: 100%; text-align: left; padding: 1rem 1.5rem; margin: 0.5rem 0; border: 2px solid #f1f2f6; border-radius: 12px; background: #fff; cursor: pointer; font-size: 1rem; transition: 0.2s; }
-        .correct { background: #e6fffb !important; border-color: var(--success) !important; color: var(--success) !important; font-weight: 600; }
-        .wrong { background: #fff5f5 !important; border-color: var(--danger) !important; color: var(--danger) !important; }
+        /* Kahoot Style Options */
+        .q-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .opt { padding: 25px; border-radius: 15px; border: none; color: white; font-size: 1.3rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,0.2); transition: 0.1s; text-align: left; }
+        .opt-0 { background: #e21b3c; } .opt-1 { background: #1368ce; } .opt-2 { background: #d89e00; } .opt-3 { background: #26890c; }
+        
+        /* Blooket Styles */
+        .chest { font-size: 5rem; cursor: pointer; display: inline-block; transition: 0.3s; margin: 10px; }
+        .chest:hover { transform: scale(1.2); }
+        
+        #overlay { position: fixed; top:0; left:0; width:100%; height:100%; z-index:10000; display:none; pointer-events:none; }
         .hidden { display: none !important; }
-        input[type="text"] { width: 100%; padding: 1rem; border-radius: 12px; border: 2px solid #dfe6e9; margin-bottom: 1rem; }
-        #timer { font-size: 2.5rem; font-weight: 800; color: var(--primary); text-align: center; }
-        .comment-tag { background: #fff; padding: 6px 14px; border-radius: 20px; border: 1px solid #ff7675; color: #d63031; font-size: 0.85rem; display: inline-flex; margin: 4px; gap: 8px; }
-        .target-btn { background: var(--danger); color: white; border: none; padding: 8px; margin: 4px; border-radius: 8px; cursor: pointer; }
+        #timer { font-size: 3rem; font-family: 'Gaegu'; color: var(--gp-gray); }
     </style>
 </head>
-<body id="main-body">
+<body>
 
-<div id="effect-overlay"></div>
-<nav>
-    <div style="font-weight: 700; font-size: 1.2rem; color: var(--primary);">MARK PARTY <span id="admin-badge" style="color:var(--admin); font-size:0.8rem; display:none;">● ADMIN</span></div>
-    <div id="user-tag" class="hidden">👤 <span id="user-name"></span></div>
-</nav>
+<div id="overlay"></div>
 
 <div class="container">
-    <div id="view-login" class="card" style="text-align: center;">
-        <h2>ยินดีต้อนรับบอส ✌️</h2>
-        <input type="text" id="input-user" placeholder="ใส่ชื่อของคุณ (มาร์คพิมพ์ 'mark')">
-        <button class="btn" onclick="app.login()">เริ่มการสอบ</button>
-    </div>
+    <div id="v-lobby" class="card">
+        <h1 style="font-family: 'Gaegu'; font-size: 4rem;">MARK PARTY 🚀</h1>
+        <input type="text" id="in-user" placeholder="ใส่ชื่อของคุณ..." style="width: 80%; padding: 15px; border-radius: 15px; border: 3px solid #3d3d3d; font-size: 1.5rem; text-align: center; margin-bottom: 20px;">
+        <div>
+            <button class="btn-gp btn-white" onclick="core.init('solo')">Solo Mode</button>
+            <button class="btn-gp btn-yellow" onclick="core.init('party')">Party (Battle!)</button>
+        </div>
 
-    <div id="view-menu" class="hidden">
-        <div id="admin-panel" class="card" style="border: 2px dashed var(--admin); display:none; background: #f3f0ff;">
-            <h3 style="color: var(--admin);">🛠 Admin Host Control</h3>
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button class="btn" style="background: #e67e22;" onclick="app.toggleGameMode(true)">เปิด Game Mode 🎮</button>
-                <button class="btn" style="background: #95a5a6;" onclick="app.toggleGameMode(false)">โหมดปกติ 🏠</button>
+        <div id="adm-panel" class="hidden" style="margin-top: 30px; border-top: 5px solid #3d3d3d; padding-top: 20px;">
+            <h3 style="font-family: 'Gaegu';">Admin Control (Mark Only)</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                <button class="btn-gp" onclick="core.start('sci')">Science (60)</button>
+                <button class="btn-gp" onclick="core.start('eng')">English (60)</button>
+                <button class="btn-gp" onclick="core.start('his')">History (40)</button>
+                <button class="btn-gp" onclick="core.start('car')">การงาน (20)</button>
+                <button class="btn-gp" onclick="core.start('dan')">นาฎศิลป์ (20)</button>
             </div>
-            <div id="admin-menu-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
-            <button class="btn" style="background: #333; margin-top: 15px;" onclick="app.clearScores()">ล้างคะแนนระบบ</button>
-        </div>
-        <div class="card">
-            <h3>🏆 TOP 10 สงครามครั้งนี้</h3>
-            <table style="width: 100%;"><tbody id="leader-table-body"></tbody></table>
-        </div>
-        <div class="card" style="border-top: 4px solid #ff7675;">
-            <h3 style="color: #ff7675;">💬 ข้อความรั่วๆ</h3>
-            <div id="public-comments"></div>
         </div>
     </div>
 
-    <div id="view-quiz" class="hidden">
+    <div id="v-quiz" class="hidden">
         <div class="card">
-            <div id="timer">10</div>
-            <h2 id="q-title" style="text-align:center;"></h2>
-            <div id="input-area" class="hidden"><input type="text" id="custom-answer" placeholder="พิมพ์ข้อความรั่วๆ..."></div>
-            <div id="opt-container"></div>
-            <div id="admin-next-area" class="hidden"><button class="btn" style="background: var(--admin)" onclick="app.adminNext()">ข้อถัดไป ➔</button></div>
+            <div id="timer">15</div>
+            <h2 id="q-sub" style="color: #666; font-family: 'Gaegu';"></h2>
+            <h1 id="q-txt" style="font-size: 2.2rem; margin: 20px 0;"></h1>
+            <div id="opt-box" class="q-grid"></div>
         </div>
     </div>
 
-    <div id="view-rank" class="hidden">
-        <div class="card" style="text-align: center;">
-            <div id="reward-section" class="hidden">
-                <h3 style="color: var(--admin)">🎁 ถูกต้อง! สุ่มของแกล้งเพื่อน</h3>
-                <div id="item-action-area"><button class="btn" onclick="app.rollItem()">กดเพื่อสุ่ม</button></div>
+    <div id="v-blooket" class="hidden">
+        <div class="card">
+            <h1 style="font-family: 'Gaegu';">CORRECT! PICK A CHEST!</h1>
+            <div onclick="core.openChest()" class="chest">🎁</div>
+            <div onclick="core.openChest()" class="chest">📦</div>
+            <div onclick="core.openChest()" class="chest">💼</div>
+            <div id="atk-box" class="hidden">
+                <h2 id="item-got" style="color: #ff4757; font-size: 2rem;"></h2>
+                <div id="target-list"></div>
             </div>
-            <p>รอโฮสต์เปลี่ยนข้อ...</p>
         </div>
     </div>
 </div>
 
 <script>
-const firebaseConfig = {
-    apiKey: "AIzaSyAVAd78Y9OUKFdfkPsV96uj2IjFwWu1rAc",
-    authDomain: "mark-d1f3f.firebaseapp.com",
-    databaseURL: "https://mark-d1f3f-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "mark-d1f3f",
-    storageBucket: "mark-d1f3f.firebasestorage.app",
-    messagingSenderId: "937114827864",
-    appId: "1:937114827864:web:24906a17f19c510714de2d"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-const quizData = {
-    science: { title: "วิทยาศาสตร์ (60 ข้อ)", questions: [
-        {q: "1. Which simple machine is used in a see-saw?", a: ["Lever", "Pulley", "Screw", "Wedge"], c: 0},
-        {q: "2. Kinetic energy is defined as the energy of ____.", a: ["Position", "Motion", "Storage", "Heat"], c: 1},
-        {q: "3. What is the standard unit of Power?", a: ["Joule", "Newton", "Watt", "Pascal"], c: 2},
-        {q: "4. Potential Energy (PE) is calculated by ____.", a: ["mgh", "1/2 mv^2", "F x s", "P/t"], c: 0},
-        {q: "5. A fixed pulley helps change the ____ of force.", a: ["Amount", "Mass", "Direction", "Speed"], c: 2},
-        {q: "6. Which is an example of a second-class lever?", a: ["Scissors", "Tweezers", "Wheelbarrow", "Fishing rod"], c: 2},
-        {q: "7. Mechanical Advantage (MA) equals Output Force divided by ____.", a: ["Input Force", "Distance", "Time", "Gravity"], c: 0},
-        {q: "8. A knife or an axe is an example of a ____.", a: ["Lever", "Screw", "Wedge", "Pulley"], c: 2},
-        {q: "9. Work is done only when there is ____.", a: ["Force", "Mass", "Displacement", "Time"], c: 2},
-        {q: "10. Efficiency of a real machine is always ____ 100%.", a: ["Equal to", "More than", "Less than", "Exactly"], c: 2},
-        {q: "11. 1 Joule per second is equal to 1 ____.", a: ["Watt", "Newton", "Volt", "Ampere"], c: 0},
-        {q: "12. The formula for Kinetic Energy is ____.", a: ["mgh", "1/2 mv^2", "m x v", "F/A"], c: 1},
-        {q: "13. A ramp is also known as an ____.", a: ["Inclined Plane", "Lever", "Pulley", "Wedge"], c: 0},
-        {q: "14. A screw is essentially an inclined plane wrapped around a ____.", a: ["Square", "Circle", "Cylinder", "Triangle"], c: 2},
-        {q: "15. The point where a lever rotates is called the ____.", a: ["Effort", "Load", "Fulcrum", "Arm"], c: 2},
-        {q: "16. If you lift a 10N object 2 meters, the work done is ____ Joules.", a: ["5", "10", "20", "40"], c: 2},
-        {q: "17. Power is the rate of doing ____.", a: ["Force", "Work", "Mass", "Energy"], c: 1},
-        {q: "18. A flag pole uses which type of machine?", a: ["Lever", "Fixed Pulley", "Screw", "Wedge"], c: 1},
-        {q: "19. Which has more KE: a car at 20m/s or at 40m/s?", a: ["20m/s", "40m/s", "Same", "Zero"], c: 1},
-        {q: "20. Gravity on Earth is approximately ____ m/s^2.", a: ["1.6", "5.0", "9.8", "12.0"], c: 2},
-        {q: "21. A bottle opener is a ____ class lever.", a: ["1st", "2nd", "3rd", "None"], c: 1},
-        {q: "22. Human elbow is an example of a ____ class lever.", a: ["1st", "2nd", "3rd", "None"], c: 2},
-        {q: "23. Energy cannot be created or destroyed, only ____.", a: ["Used up", "Transformed", "Deleted", "Fixed"], c: 1},
-        {q: "24. A door handle is a type of ____.", a: ["Pulley", "Wedge", "Wheel and Axle", "Screw"], c: 2},
-        {q: "25. Which is NOT a simple machine?", a: ["Lever", "Engine", "Pulley", "Wedge"], c: 1},
-        {q: "26. Friction usually converts KE into ____ energy.", a: ["Chemical", "Potential", "Thermal (Heat)", "Nuclear"], c: 2},
-        {q: "27. Work = Force x Distance. If Distance is 0, Work is ____.", a: ["Max", "Positive", "Zero", "Negative"], c: 2},
-        {q: "28. A staircase is an example of an ____.", a: ["Inclined Plane", "Lever", "Screw", "Wedge"], c: 0},
-        {q: "29. Scissors are a ____ class lever.", a: ["1st", "2nd", "3rd", "None"], c: 0},
-        {q: "30. Tweezers are a ____ class lever.", a: ["1st", "2nd", "3rd", "None"], c: 2},
-        {q: "31. Unit of Force is named after ____.", a: ["Joule", "Watt", "Newton", "Einstein"], c: 2},
-        {q: "32. Elastic PE is stored in a ____.", a: ["Battery", "Food", "Stretched Rubber Band", "Rock"], c: 2},
-        {q: "33. If you double the mass, the PE ____.", a: ["Doubles", "Triples", "Half", "Stays same"], c: 0},
-        {q: "34. 1 Horsepower (HP) is about ____ Watts.", a: ["500", "746", "1000", "1200"], c: 1},
-        {q: "35. A fishing rod is a ____ class lever.", a: ["1st", "2nd", "3rd", "None"], c: 2},
-        {q: "36. The faster an object moves, the more ____ it has.", a: ["PE", "KE", "Mass", "Gravity"], c: 1},
-        {q: "37. Ideal Mechanical Advantage (IMA) ignores ____.", a: ["Force", "Distance", "Friction", "Mass"], c: 2},
-        {q: "38. Chemical energy is stored in ____.", a: ["Springs", "Food/Fuel", "Height", "Motion"], c: 1},
-        {q: "39. A Nutcracker is a ____ class lever.", a: ["1st", "2nd", "3rd", "None"], c: 1},
-        {q: "40. A zipper uses which simple machine?", a: ["Wedge", "Pulley", "Lever", "Screw"], c: 0},
-        {q: "41. What is the PE of a 2kg book 3m high? (g=10)", a: ["6J", "20J", "30J", "60J"], c: 3},
-        {q: "42. A crane uses a ____ system to lift heavy loads.", a: ["Screw", "Block and Tackle (Pulleys)", "Lever", "Wedge"], c: 1},
-        {q: "43. If velocity doubles, KE increases by ____ times.", a: ["2", "4", "8", "16"], c: 1},
-        {q: "44. Pushing a wall and it doesn't move. Work = ____.", a: ["Positive", "Negative", "Zero", "Max"], c: 2},
-        {q: "45. A hammer pulling a nail is a ____ class lever.", a: ["1st", "2nd", "3rd", "None"], c: 0},
-        {q: "46. Lever where Fulcrum is between Effort and Load is ____.", a: ["1st class", "2nd class", "3rd class", "None"], c: 0},
-        {q: "47. Broom is a ____ class lever.", a: ["1st", "2nd", "3rd", "None"], c: 2},
-        {q: "48. A drill bit is an example of a ____.", a: ["Lever", "Screw", "Wedge", "Pulley"], c: 1},
-        {q: "49. Total Mechanical Energy = ____ + ____.", a: ["PE + Heat", "KE + PE", "Force + Speed", "Mass + Gravity"], c: 1},
-        {q: "50. Law of Conservation of Energy says energy is ____.", a: ["Always lost", "Constant", "Always increasing", "Zero"], c: 1},
-        {q: "51. An object on a shelf has ____ energy.", a: ["Kinetic", "Potential", "Light", "Sound"], c: 1},
-        {q: "52. Rolling a ball down a hill, PE changes to ____.", a: ["KE", "Chemical", "Nuclear", "Mass"], c: 0},
-        {q: "53. What is the unit of Mass?", a: ["Newton", "Joule", "Kilogram", "Watt"], c: 2},
-        {q: "54. A slide at the park is an ____.", a: ["Wedge", "Inclined Plane", "Screw", "Lever"], c: 1},
-        {q: "55. Which machine has a sharp edge?", a: ["Lever", "Pulley", "Wedge", "Screw"], c: 2},
-        {q: "56. Work is measured in N-m, also called ____.", a: ["Watt", "Joule", "Pascal", "Volt"], c: 1},
-        {q: "57. A car engine is a ____ machine.", a: ["Simple", "Complex", "Natural", "Manual"], c: 1},
-        {q: "58. MA of a single fixed pulley is ____.", a: ["1", "2", "3", "0"], c: 0},
-        {q: "59. Moving a heavy box up a ramp requires ____ force than lifting it.", a: ["More", "Less", "Same", "Zero"], c: 1},
-        {q: "60. Solar panels convert light into ____ energy.", a: ["Kinetic", "Potential", "Electrical", "Mechanical"], c: 2}
-    ],
-    english: { title: "ภาษาอังกฤษ (60 ข้อ)", questions: [
-        {q: "1. I have ____ my dinner already.", a: ["eat", "ate", "eaten", "eating"], c: 2},
-        {q: "2. She has lived in Bangkok ____ 2010.", a: ["since", "for", "yet", "already"], c: 0},
-        {q: "3. We haven't finished the report ____.", a: ["since", "for", "yet", "already"], c: 2},
-        {q: "4. They have ____ been to Japan twice.", a: ["since", "for", "yet", "already"], c: 3},
-        {q: "5. He has worked here ____ ten years.", a: ["since", "for", "yet", "already"], c: 1},
-        {q: "6. ____ you ever seen a lion?", a: ["Do", "Did", "Has", "Have"], c: 3},
-        {q: "7. My mother has ____ cooked some food.", a: ["just", "since", "yet", "ever"], c: 0},
-        {q: "8. Has she ____ her homework?", a: ["do", "did", "done", "doing"], c: 2},
-        {q: "9. I ____ seen that movie before.", a: ["has", "have", "am", "do"], c: 1},
-        {q: "10. We have been friends ____ we were young.", a: ["since", "for", "yet", "already"], c: 0},
-        {q: "11. Jack has ____ gone to the market.", a: ["yet", "just", "since", "ever"], c: 1},
-        {q: "12. Have they ____ their project yet?", a: ["start", "started", "starting", "starts"], c: 1},
-        {q: "13. I haven't ____ him since last week.", a: ["see", "saw", "seen", "seeing"], c: 2},
-        {q: "14. How long ____ you had this car?", a: ["do", "did", "has", "have"], c: 3},
-        {q: "15. She ____ already bought a new dress.", a: ["has", "have", "is", "does"], c: 0},
-        {q: "16. We have studied English ____ 2 hours.", a: ["since", "for", "yet", "already"], c: 1},
-        {q: "17. ____ your father ever visited USA?", a: ["Has", "Have", "Do", "Is"], c: 0},
-        {q: "18. They ____ just arrived at the airport.", a: ["has", "have", "are", "do"], c: 1},
-        {q: "19. I have known her ____ a long time.", a: ["since", "for", "yet", "already"], c: 1},
-        {q: "20. The train has ____ left the station.", a: ["yet", "already", "since", "for"], c: 1},
-        {q: "21. Choose the correct V.3 of 'Speak'.", a: ["Speak", "Spoke", "Spoken", "Speaking"], c: 2},
-        {q: "22. Choose the correct V.3 of 'Write'.", a: ["Write", "Wrote", "Written", "Writing"], c: 2},
-        {q: "23. Choose the correct V.3 of 'Buy'.", a: ["Buy", "Bought", "Boughten", "Buying"], c: 1},
-        {q: "24. Choose the correct V.3 of 'Go'.", a: ["Go", "Went", "Gone", "Going"], c: 2},
-        {q: "25. Choose the correct V.3 of 'See'.", a: ["See", "Saw", "Seen", "Seeing"], c: 2},
-        {q: "26. Choose the correct V.3 of 'Take'.", a: ["Take", "Took", "Taken", "Taking"], c: 2},
-        {q: "27. Choose the correct V.3 of 'Make'.", a: ["Make", "Maked", "Made", "Making"], c: 2},
-        {q: "28. Choose the correct V.3 of 'Drink'.", a: ["Drink", "Drank", "Drunk", "Drinking"], c: 2},
-        {q: "29. Choose the correct V.3 of 'Drive'.", a: ["Drive", "Drove", "Driven", "Driving"], c: 2},
-        {q: "30. Choose the correct V.3 of 'Fly'.", a: ["Fly", "Flew", "Flown", "Flying"], c: 2},
-        {q: "31. I ____ never been to Italy.", a: ["has", "have", "am", "do"], c: 1},
-        {q: "32. She has ____ finished her lunch.", a: ["just", "yet", "ever", "never"], c: 0},
-        {q: "33. Have you ____ been to the zoo?", a: ["ever", "never", "yet", "since"], c: 0},
-        {q: "34. My dog has ____ its ball.", a: ["lose", "lost", "losing", "loses"], c: 1},
-        {q: "35. We ____ not finished the lesson yet.", a: ["has", "have", "do", "are"], c: 1},
-        {q: "36. Has the bell ____?", a: ["ring", "rang", "rung", "ringing"], c: 2},
-        {q: "37. Someone has ____ my phone.", a: ["steal", "stole", "stolen", "stealing"], c: 2},
-        {q: "38. I have lived here ____ I was born.", a: ["since", "for", "yet", "already"], c: 0},
-        {q: "39. They ____ worked here for 20 years.", a: ["has", "have", "is", "are"], c: 1},
-        {q: "40. She hasn't ____ her breakfast yet.", a: ["eat", "ate", "eaten", "eating"], c: 2},
-        {q: "41. Which word is a noun?", a: ["Run", "Beautiful", "Apple", "Quickly"], c: 2},
-        {q: "42. Which word is an adjective?", a: ["Cat", "Tall", "Sleep", "Slowly"], c: 1},
-        {q: "43. Look! The bird ____ flying.", a: ["is", "am", "are", "was"], c: 0},
-        {q: "44. Yesterday, I ____ to the park.", a: ["go", "goes", "went", "going"], c: 2},
-        {q: "45. How ____ sugar do you want?", a: ["many", "much", "few", "any"], c: 1},
-        {q: "46. How ____ students are in class?", a: ["much", "many", "little", "any"], c: 1},
-        {q: "47. This book is ____ than that one.", a: ["good", "better", "best", "goodest"], c: 1},
-        {q: "48. That is the ____ car in the world.", a: ["fast", "faster", "fastest", "fastly"], c: 2},
-        {q: "49. Cats are afraid ____ dogs.", a: ["of", "in", "at", "to"], c: 0},
-        {q: "50. Can you ____ the piano?", a: ["play", "plays", "played", "playing"], c: 0},
-        {q: "51. We ____ football every Sunday.", a: ["play", "plays", "played", "playing"], c: 0},
-        {q: "52. She ____ like coffee.", a: ["don't", "doesn't", "isn't", "not"], c: 1},
-        {q: "53. ____ you like pizza?", a: ["Do", "Does", "Is", "Are"], c: 0},
-        {q: "54. Listen! Someone ____ singing.", a: ["is", "am", "are", "was"], c: 0},
-        {q: "55. Where ____ you live?", a: ["do", "does", "is", "are"], c: 0},
-        {q: "56. I ____ a student.", a: ["is", "am", "are", "be"], c: 1},
-        {q: "57. They ____ my friends.", a: ["is", "am", "are", "be"], c: 2},
-        {q: "58. What ____ your name?", a: ["is", "am", "are", "be"], c: 0},
-        {q: "59. Are there ____ oranges in the box?", a: ["some", "any", "a", "an"], c: 1},
-        {q: "60. I would like ____ water, please.", a: ["any", "some", "a", "an"], c: 1}
+// ================= [ FULL 200 QUESTIONS - HARD-CODED ] =================
+const QUESTIONS = {
+    sci: { title: "SCIENCE (60 Qs)", data: [
+        {q: "1. Which machine has the fulcrum in the middle?", a: ["1st class lever", "2nd class lever", "3rd class lever", "Pulley"], c: 0},
+        {q: "2. A wheelbarrow is an example of which lever?", a: ["1st class", "2nd class", "3rd class", "Wedge"], c: 1},
+        {q: "3. Unit of Force is?", a: ["Joule", "Watt", "Newton", "Pascal"], c: 2},
+        {q: "4. Work = Force x ____?", a: ["Time", "Mass", "Distance", "Power"], c: 2},
+        {q: "5. Energy of position is?", a: ["Kinetic", "Potential", "Heat", "Sound"], c: 1},
+        {q: "6. A fixed pulley changes ____ of force.", a: ["Size", "Mass", "Direction", "Volume"], c: 2},
+        {q: "7. Power is Work divided by ____?", a: ["Time", "Distance", "Force", "Gravity"], c: 0},
+        {q: "8. 1 Horsepower is?", a: ["500W", "746W", "1000W", "1200W"], c: 1},
+        {q: "9. Energy cannot be destroyed is ____?", a: ["Law of Gravity", "Law of Energy Conservation", "Law of Motion", "Ohm's Law"], c: 1},
+        {q: "10. Scissors are which lever?", a: ["1st class", "2nd class", "3rd class", "None"], c: 0},
+        {q: "11. Unit of Energy is?", a: ["Newton", "Watt", "Joule", "Volt"], c: 2},
+        {q: "12. Rate of doing work is?", a: ["Force", "Power", "Energy", "Speed"], c: 1},
+        {q: "13. A ramp is an ____?", a: ["Lever", "Pulley", "Inclined Plane", "Screw"], c: 2},
+        {q: "14. Fishing rod is which lever?", a: ["1st", "2nd", "3rd", "None"], c: 2},
+        {q: "15. Chemical energy is in ____?", a: ["Sun", "Wind", "Battery", "Sound"], c: 2},
+        {q: "16. Pivot point is called?", a: ["Effort", "Load", "Fulcrum", "Base"], c: 2},
+        {q: "17. Unit of Power is?", a: ["Joule", "Watt", "Newton", "Pascal"], c: 1},
+        {q: "18. Tweezers are which lever?", a: ["1st", "2nd", "3rd", "None"], c: 2},
+        {q: "19. Efficiency is always ____ than 100%.", a: ["More", "Less", "Equal", "Twice"], c: 1},
+        {q: "20. Gravity on Earth is?", a: ["5", "9.8", "12", "15"], c: 1},
+        {q: "21. A knife is a ____?", a: ["Lever", "Wedge", "Screw", "Pulley"], c: 1},
+        {q: "22. Kinetic energy formula?", a: ["mgh", "1/2mv2", "Fs", "P/t"], c: 1},
+        {q: "23. 3rd class lever Effort is in ____?", a: ["End", "Middle", "Pivot", "None"], c: 1},
+        {q: "24. Lifting a bag vertically is ____?", a: ["Work", "Power", "Pressure", "Speed"], c: 0},
+        {q: "25. Nutcracker is which lever?", a: ["1st", "2nd", "3rd", "None"], c: 1},
+        {q: "26. Friction produces ____?", a: ["Cold", "Heat", "Light", "Mass"], c: 1},
+        {q: "27. Moving an object 0m is ____ Work?", a: ["Zero", "Max", "High", "Low"], c: 0},
+        {q: "28. Potential energy depends on ____?", a: ["Speed", "Height", "Time", "Color"], c: 1},
+        {q: "29. Broom is which lever?", a: ["1st", "2nd", "3rd", "None"], c: 2},
+        {q: "30. Axe is a ____?", a: ["Lever", "Pulley", "Wedge", "Screw"], c: 2},
+        {q: "31. Unit for Mass is?", a: ["Gram", "Kilogram", "Newton", "Joule"], c: 1},
+        {q: "32. Energy from the sun is ____?", a: ["Nuclear", "Solar", "Chemical", "Sound"], c: 1},
+        {q: "33. Speed = Distance / ____?", a: ["Mass", "Time", "Force", "Work"], c: 1},
+        {q: "34. Crowbar is which lever?", a: ["1st", "2nd", "3rd", "None"], c: 0},
+        {q: "35. Unit for Work is same as ____?", a: ["Force", "Energy", "Power", "Speed"], c: 1},
+        {q: "36. Staircase is an ____?", a: ["Inclined Plane", "Lever", "Pulley", "Wedge"], c: 0},
+        {q: "37. Effort is the ____ we apply.", a: ["Weight", "Force", "Energy", "Work"], c: 1},
+        {q: "38. Bottle opener is class ____?", a: ["1st", "2nd", "3rd", "None"], c: 1},
+        {q: "39. Tongs are class ____?", a: ["1st", "2nd", "3rd", "None"], c: 2},
+        {q: "40. Hammer (nail puller) is class ____?", a: ["1st", "2nd", "3rd", "None"], c: 0},
+        {q: "41. Screw is an inclined plane on a ____?", a: ["Box", "Cylinder", "Lever", "Pulley"], c: 1},
+        {q: "42. 1 Joule is 1 Newton x 1 ____?", a: ["Second", "Meter", "Watt", "Kilogram"], c: 1},
+        {q: "43. Moving energy is ____ energy.", a: ["Potential", "Kinetic", "Stored", "Light"], c: 1},
+        {q: "44. Force unit N stands for?", a: ["Net", "Newton", "None", "Normal"], c: 1},
+        {q: "45. Mechanical energy = KE + ____?", a: ["Heat", "PE", "Light", "Sound"], c: 1},
+        {q: "46. Movable pulley reduces ____?", a: ["Distance", "Force", "Mass", "Time"], c: 1},
+        {q: "47. Stapler is class ____?", a: ["1st", "2nd", "3rd", "None"], c: 2},
+        {q: "48. Paper cutter is class ____?", a: ["1st", "2nd", "3rd", "None"], c: 1},
+        {q: "49. Rowing an oar is class ____?", a: ["1st", "2nd", "3rd", "None"], c: 0},
+        {q: "50. Law of inertia is Newton's ____ Law?", a: ["1st", "2nd", "3rd", "4th"], c: 0},
+        {q: "51. PE formula is ____?", a: ["mgh", "1/2mv2", "Fs", "P/t"], c: 0},
+        {q: "52. Weight = Mass x ____?", a: ["Speed", "Gravity", "Height", "Time"], c: 1},
+        {q: "53. Zippers use the ____ principle.", a: ["Lever", "Wedge", "Screw", "Pulley"], c: 1},
+        {q: "54. Flagpoles use a ____?", a: ["Lever", "Pulley", "Screw", "Wedge"], c: 1},
+        {q: "55. 1 Watt = 1 ____ per second.", a: ["Newton", "Joule", "Volt", "Pascal"], c: 1},
+        {q: "56. Work unit J stands for?", a: ["Jump", "Joule", "Junior", "Joint"], c: 1},
+        {q: "57. Load is the ____.", a: ["Force", "Weight", "Distance", "Time"], c: 1},
+        {q: "58. Pliers are class ____?", a: ["1st", "2nd", "3rd", "None"], c: 0},
+        {q: "59. Seesaw is class ____?", a: ["1st", "2nd", "3rd", "None"], c: 0},
+        {q: "60. Science is ____?", a: ["Easy", "Fun", "Hard", "Important"], c: 1}
     ]},
-    history: { title: "ประวัติศาสตร์ (40 ข้อ)", questions: [
-        {q: "1. ประเทศใดไม่เคยตกเป็นอาณานิคมของชาติตะวันตก?", a: ["ลาว", "ไทย", "พม่า", "ฟิลิปปินส์"], c: 1},
-        {q: "2. อินโดนีเซียเคยเป็นอาณานิคมของชาติใด?", a: ["อังกฤษ", "ฝรั่งเศส", "เนเธอร์แลนด์", "สเปน"], c: 2},
-        {q: "3. เวียดนาม กัมพูชา และลาว เคยตกเป็นอาณานิคมของ?", a: ["อังกฤษ", "ฝรั่งเศส", "สหรัฐอเมริกา", "โปรตุเกส"], c: 1},
-        {q: "4. ฟิลิปปินส์ตกเป็นอาณานิคมของประเทศใดเป็นชาติแรก?", a: ["สเปน", "อังกฤษ", "เนเธอร์แลนด์", "อเมริกา"], c: 0},
-        {q: "5. ชาติตะวันตกเข้ามาในภูมิภาคนี้เพื่อวัตถุประสงค์ใดเป็นหลัก?", a: ["เผยแผ่ศาสนา", "แสวงหาเครื่องเทศและทรัพยากร", "ท่องเที่ยว", "สร้างโรงเรียน"], c: 1},
-        {q: "6. พม่าตกเป็นอาณานิคมของประเทศใด?", a: ["ฝรั่งเศส", "อังกฤษ", "ไทย", "จีน"], c: 1},
-        {q: "7. อาเซียน (ASEAN) ก่อตั้งขึ้นในปี พ.ศ. ใด?", a: ["2500", "2510", "2520", "2530"], c: 1},
-        {q: "8. สิงคโปร์แยกตัวออกจากประเทศใดในปี พ.ศ. 2508?", a: ["อังกฤษ", "อินโดนีเซีย", "มาเลเซีย", "ไทย"], c: 2},
-        {q: "9. แม่น้ำสายสำคัญที่ไหลผ่านหลายประเทศในอาเซียนคือ?", a: ["แม่น้ำเจ้าพระยา", "แม่น้ำโขง", "แม่น้ำอิรวดี", "แม่น้ำแดง"], c: 1},
-        {q: "10. ประเทศใดในอาเซียนนับถือคริสต์คาทอลิกมากที่สุด?", a: ["ไทย", "ฟิลิปปินส์", "มาเลเซีย", "ลาว"], c: 1},
-        {q: "11. ติมอร์-เลสเต เคยอยู่ภายใต้การปกครองของชาติใด?", a: ["อังกฤษ", "โปรตุเกส", "สเปน", "ฝรั่งเศส"], c: 1},
-        {q: "12. นครวัด ตั้งอยู่ในประเทศใด?", a: ["ไทย", "กัมพูชา", "ลาว", "เวียดนาม"], c: 1},
-        {q: "13. ใครคือผู้นำในการกู้เอกราชของเวียดนาม?", a: ["โฮจิมินห์", "สีจิ้นผิง", "อองซาน", "นโรดม สีหนุ"], c: 0},
-        {q: "14. ศาสนาอิสลามหนาแน่นที่สุดในประเทศใด?", a: ["ลาว", "เวียดนาม", "อินโดนีเซีย", "กัมพูชา"], c: 2},
-        {q: "15. บรูไนได้รับเอกราชจากประเทศใด?", a: ["อังกฤษ", "สเปน", "ญี่ปุ่น", "เนเธอร์แลนด์"], c: 0},
-        {q: "16. ดินแดนพม่าในอดีตมีราชวงศ์ใดที่ยิ่งใหญ่?", a: ["ราชวงศ์คองบอง", "ราชวงศ์จันทร", "ราชวงศ์มังราย", "ราชวงศ์สิงห์"], c: 0},
-        {q: "17. สนธิสัญญาเบาว์ริงทำขึ้นในรัชกาลใด?", a: ["ร.3", "ร.4", "ร.5", "ร.6"], c: 1},
-        {q: "18. ประเทศลาวไม่มีพรมแดนติดกับสิ่งใด?", a: ["แม่น้ำ", "ภูเขา", "ทะเล", "ป่า"], c: 2},
-        {q: "19. สงครามเวียดนามเป็นการสู้กันระหว่างลัทธิใด?", a: ["พุทธ-คริสต์", "ประชาธิปไตย-คอมมิวนิสต์", "ไทย-พม่า", "จน-รวย"], c: 1},
-        {q: "20. พุทธศาสนาแบบเถรวาทแพร่หลายในชาติใด?", a: ["ฟิลิปปินส์", "อินโดนีเซีย", "ไทย/พม่า/ลาว", "มาเลเซีย"], c: 2},
-        {q: "21. แหล่งมรดกโลก 'หลวงพระบาง' อยู่ในประเทศ?", a: ["กัมพูชา", "ลาว", "เวียดนาม", "ไทย"], c: 1},
-        {q: "22. สิงคโปร์มีทรัพยากรธรรมชาติใดเป็นหลัก?", a: ["น้ำมัน", "ยางพารา", "ทองคำ", "แทบไม่มี (เน้นการค้า)"], c: 3},
-        {q: "23. ญี่ปุ่นบุกอาเซียนในสงครามโลกครั้งที่เท่าไหร่?", a: ["ครั้งที่ 1", "ครั้งที่ 2", "ครั้งที่ 3", "สงครามเย็น"], c: 1},
-        {q: "24. ประเทศใดมีหมู่เกาะมากที่สุดในภูมิภาค?", a: ["ฟิลิปปินส์", "อินโดนีเซีย", "มาเลเซีย", "สิงคโปร์"], c: 1},
-        {q: "25. สมาคมอาเซียนมีผู้ก่อตั้งกี่ประเทศแรกเริ่ม?", a: ["3 ประเทศ", "5 ประเทศ", "10 ประเทศ", "12 ประเทศ"], c: 1},
-        {q: "26. สำนักงานเลขาธิการอาเซียนตั้งอยู่ที่เมืองใด?", a: ["กรุงเทพฯ", "จาการ์ตา", "กัวลาลัมเปอร์", "มะนิลา"], c: 1},
-        {q: "27. ภาษาทางการของอาเซียนคือภาษาใด?", a: ["ภาษาไทย", "ภาษามาเลย์", "ภาษาอังกฤษ", "ภาษาจีน"], c: 2},
-        {q: "28. ชาติใดใช้อักษรโรมันมาเขียนเป็นภาษาตัวเอง (กว็อกหงือ)?", a: ["ไทย", "เวียดนาม", "ลาว", "พม่า"], c: 1},
-        {q: "29. บูโรพุทโธ เป็นศาสนสถานในศาสนาใด?", a: ["อิสลาม", "คริสต์", "พุทธ", "พราหมณ์"], c: 2},
-        {q: "30. ปราสาทนครวัดสร้างขึ้นเพื่อบูชาเทพเจ้าองค์ใด?", a: ["พระพุทธเจ้า", "พระวิษณุ", "พระศิวะ", "พระพรหม"], c: 1},
-        {q: "31. กษัตริย์องค์สุดท้ายของพม่าคือใคร?", a: ["พระเจ้าสีป่อ", "พระเจ้ามังระ", "พระเจ้าบุเรงนอง", "พระเจ้าปดุง"], c: 0},
-        {q: "32. สงครามเย็นส่งผลต่ออาเซียนอย่างไร?", a: ["เกิดการแตกแยกทางการเมือง", "รวยขึ้น", "ไม่มีผล", "รวมตัวกันได้ง่ายขึ้น"], c: 0},
-        {q: "33. ดินแดน 'สุวรรณภูมิ' หมายถึงชาติใดในปัจจุบัน?", a: ["ยุโรป", "กลุ่มประเทศอาเซียน", "อเมริกา", "แอฟริกา"], c: 1},
-        {q: "34. ประเทศใดมีเนื้อที่น้อยที่สุดในภูมิภาค?", a: ["ลาว", "บรูไน", "สิงคโปร์", "กัมพูชา"], c: 2},
-        {q: "35. ใครคือบิดาแห่งประเทศสิงคโปร์?", a: ["ลี กวน ยู", "ตวนกู อับดุล ระห์มาน", "มหาเธร์", "โจโกวิ"], c: 0},
-        {q: "36. การค้าเครื่องเทศเป็นจุดเริ่มต้นของชาติใดที่เข้ามา?", a: ["โปรตุเกส", "สเปน", "อังกฤษ", "เนเธอร์แลนด์"], c: 0},
-        {q: "37. เวียดนามแบ่งเป็นเหนือและใต้ที่เส้นขนานใด?", a: ["17", "38", "45", "0"], c: 0},
-        {q: "38. ชาติใดใช้ระบบสุลต่านเป็นประมุข?", a: ["บรูไน/มาเลเซีย", "ไทย/ลาว", "เวียดนาม/พม่า", "สิงคโปร์"], c: 0},
-        {q: "39. ทุ่งไหหิน อยู่ในประเทศใด?", a: ["ไทย", "ลาว", "พม่า", "กัมพูชา"], c: 1},
-        {q: "40. อาเซียนใช้หลักการใดในการทำงาน?", a: ["การแทรกแซง", "ฉันทามติและการไม่แทรกแซง", "คำสั่งจากไทย", "การใช้กำลัง"], c: 1}
+    eng: { title: "ENGLISH (60 Qs)", data: [
+        {q: "1. I ____ to school yesterday.", a: ["go", "goes", "gone", "went"], c: 3},
+        {q: "2. She ____ likes cats.", a: ["do", "does", "is", "am"], c: 1},
+        {q: "3. They ____ watching TV now.", a: ["is", "am", "are", "was"], c: 2},
+        {q: "4. ____ you ever seen a whale?", a: ["Do", "Did", "Has", "Have"], c: 3},
+        {q: "5. He is ____ than me.", a: ["tall", "taller", "tallest", "more tall"], c: 1},
+        {q: "6. This is the ____ book.", a: ["good", "better", "best", "gooder"], c: 2},
+        {q: "7. Look! The bird ____ flying.", a: ["is", "am", "are", "was"], c: 0},
+        {q: "8. ____ is your name?", a: ["Who", "What", "Where", "When"], c: 1},
+        {q: "9. ____ are you from?", a: ["Who", "What", "Where", "When"], c: 2},
+        {q: "10. ____ is her birthday?", a: ["Who", "What", "Where", "When"], c: 3},
+        {q: "11. A cat has four ____.", a: ["foot", "feet", "foots", "feets"], c: 1},
+        {q: "12. Many ____ are in the park.", a: ["child", "children", "childs", "childrens"], c: 1},
+        {q: "13. I ____ not like coffee.", a: ["is", "am", "do", "does"], c: 2},
+        {q: "14. She ____ not like coffee.", a: ["is", "am", "do", "does"], c: 3},
+        {q: "15. We ____ happy yesterday.", a: ["is", "am", "are", "were"], c: 3},
+        {q: "16. This car is ____.", a: ["my", "mine", "me", "I"], c: 1},
+        {q: "17. That is ____ apple.", a: ["a", "an", "the", "some"], c: 1},
+        {q: "18. ____ sun is hot.", a: ["A", "An", "The", "Some"], c: 2},
+        {q: "19. Can you ____ me?", a: ["help", "helps", "helped", "helping"], c: 0},
+        {q: "20. I must ____ now.", a: ["go", "goes", "went", "gone"], c: 0},
+        {q: "21. She has ____ a song.", a: ["sing", "sings", "sang", "sung"], c: 3},
+        {q: "22. Yesterday I ____ a song.", a: ["sing", "sings", "sang", "sung"], c: 2},
+        {q: "23. How ____ sugar do you want?", a: ["many", "much", "any", "some"], c: 1},
+        {q: "24. How ____ eggs do you have?", a: ["many", "much", "any", "some"], c: 0},
+        {q: "25. Water ____ at 100°C.", a: ["boil", "boils", "boiled", "boiling"], c: 1},
+        {q: "26. There ____ some milk.", a: ["is", "am", "are", "be"], c: 0},
+        {q: "27. There ____ many dogs.", a: ["is", "am", "are", "be"], c: 2},
+        {q: "28. I ____ reading a book now.", a: ["is", "am", "are", "was"], c: 1},
+        {q: "29. They ____ gone to Japan.", a: ["has", "have", "is", "are"], c: 1},
+        {q: "30. He ____ finished his work.", a: ["has", "have", "is", "are"], c: 0},
+        {q: "31. If it rains, I ____ stay home.", a: ["will", "would", "shall", "am"], c: 0},
+        {q: "32. This is ____ than that.", a: ["easy", "easier", "easiest", "more easy"], c: 1},
+        {q: "33. She is the ____ girl.", a: ["pretty", "prettier", "prettiest", "more pretty"], c: 2},
+        {q: "34. Do you have ____ pen?", a: ["a", "an", "any", "some"], c: 0},
+        {q: "35. I don't have ____ money.", a: ["a", "an", "any", "some"], c: 2},
+        {q: "36. I have ____ books.", a: ["a", "an", "any", "some"], c: 3},
+        {q: "37. He ____ to the radio every day.", a: ["listen", "listens", "listened", "listening"], c: 1},
+        {q: "38. Who ____ that man?", a: ["is", "am", "are", "be"], c: 0},
+        {q: "39. ____ you like to dance?", a: ["Do", "Does", "Is", "Are"], c: 0},
+        {q: "40. I ____ swim when I was 5.", a: ["can", "could", "shall", "will"], c: 1},
+        {q: "41. You ____ wear a mask.", a: ["must", "may", "might", "can"], c: 0},
+        {q: "42. It ____ rain tonight.", a: ["must", "might", "can", "should"], c: 1},
+        {q: "43. ____ I come in?", a: ["May", "Must", "Should", "Will"], c: 0},
+        {q: "44. He is ____ honest man.", a: ["a", "an", "the", "many"], c: 1},
+        {q: "45. The ____ are sharp.", a: ["tooth", "teeth", "tooths", "teeths"], c: 1},
+        {q: "46. Three ____ are dancing.", a: ["woman", "women", "womans", "womens"], c: 1},
+        {q: "47. Two ____ are talking.", a: ["man", "men", "mans", "mens"], c: 1},
+        {q: "48. They did it ____.", a: ["them", "their", "themselves", "they"], c: 2},
+        {q: "49. She did it ____.", a: ["her", "hers", "herself", "she"], c: 2},
+        {q: "50. I did it ____.", a: ["me", "my", "myself", "I"], c: 2},
+        {q: "51. We love ____ school.", a: ["our", "ours", "us", "we"], c: 0},
+        {q: "52. It is ____ car.", a: ["he", "him", "his", "himself"], c: 2},
+        {q: "53. These are ____ pens.", a: ["their", "theirs", "them", "they"], c: 0},
+        {q: "54. ____ book is this?", a: ["Who", "Whose", "What", "Which"], c: 1},
+        {q: "55. ____ are you crying?", a: ["Who", "What", "Where", "Why"], c: 3},
+        {q: "56. I ____ hungry now.", a: ["is", "am", "are", "be"], c: 1},
+        {q: "57. The dog is ____ the table.", a: ["in", "on", "under", "at"], c: 2},
+        {q: "58. I was born ____ 2010.", a: ["in", "on", "at", "by"], c: 0},
+        {q: "59. See you ____ Monday.", a: ["in", "on", "at", "by"], c: 1},
+        {q: "60. English is ____.", a: ["easy", "fun", "hard", "useful"], c: 1}
     ]},
-    career: { title: "การงานอาชีพ (40 ข้อ)", questions: [
-        {q: "1. การจัดสวนแบบประดิษฐ์ เน้นอะไร?", a: ["ความสมมาตร", "ความรก", "เลียนแบบป่า", "ไม่มีถูก"], c: 0},
-        {q: "2. ต้นไม้ในสวนหิน ควรเป็นอย่างไร?", a: ["โตเร็ว", "ทนแล้งและโตช้า", "ใบใหญ่", "ต้องการน้ำมาก"], c: 1},
-        {q: "3. ข้อใดคือหลักการตกแต่งบ้านที่ดี?", a: ["เน้นของแพง", "สะอาดปลอดภัยและใช้งานสะดวก", "สีมืดๆ", "วางของบนพื้น"], c: 1},
-        {q: "4. สวนบาหลีนิยมใช้สิ่งใดตกแต่ง?", a: ["กระบองเพชร", "อ่างบัว/รูปปั้นหินทราย", "ต้นสน", "ทรายขาว"], c: 1},
-        {q: "5. เครื่องดื่มน้ำอัญชันให้สีอะไร?", a: ["แดง", "ม่วง/น้ำเงิน", "เขียว", "เหลือง"], c: 1},
-        {q: "6. ขั้นตอนแรกของการเลี้ยงสัตว์เพื่อขายคือ?", a: ["หาตลาด", "คัดพันธุ์สัตว์", "สร้างกรง", "ตั้งราคา"], c: 1},
-        {q: "7. โรงเรือนไก่ควรมีลักษณะอย่างไร?", a: ["ทึบ", "อากาศถ่ายเทดี", "กลางบ้าน", "ใช้ผ้าห่มคลุม"], c: 1},
-        {q: "8. วัสดุใดใช้ทำทางเดินในสวน?", a: ["พรม", "แผ่นหิน/อิฐ", "กระดาษ", "ทรายเปล่าๆ"], c: 1},
-        {q: "9. สวนแนวตั้งเหมาะกับพื้นที่แบบใด?", a: ["กว้างมาก", "พื้นที่จำกัด/คอนโด", "ป่า", "นา"], c: 1},
-        {q: "10. ปุ๋ยคอกทำมาจากอะไร?", a: ["เคมี", "มูลสัตว์", "พลาสติก", "แก้ว"], c: 1},
-        {q: "11. การให้น้ำต้นไม้ควรให้เวลาใด?", a: ["เที่ยง", "เช้า/เย็น", "ก่อนนอน", "ไม่จำกัด"], c: 1},
-        {q: "12. เครื่องดื่มสมุนไพรใดช่วยแก้ร้อนใน?", a: ["กาแฟ", "ใบบัวบก", "น้ำอัดลม", "นม"], c: 1},
-        {q: "13. เฟอร์นิเจอร์ไม้ควรดูแลอย่างไร?", a: ["แช่น้ำ", "เช็ดแห้งและขัดเงา", "ตากแดดจัด", "ใช้กรดเช็ด"], c: 1},
-        {q: "14. การล้างแก้วที่ถูกต้องควรทำอย่างไร?", a: ["ล้างรวมจาน", "แยกฟองน้ำและล้างด้วยน้ำยา", "เช็ดด้วยทิชชู่พอ", "ไม่ต้องล้าง"], c: 1},
-        {q: "15. การตอนกิ่งช่วยขยายพันธุ์แบบใด?", a: ["เหมือนแม่เดิม", "กลายพันธุ์", "ให้ต้นสูงขึ้น", "ให้ต้นตาย"], c: 0},
-        {q: "16. วัสดุใดซับมูลไก่ได้ดี?", a: ["ผ้า", "แกลบ/เลื่อยไม้", "กระดาษสี", "ดิน"], c: 1},
-        {q: "17. การจัดบ้านสไตล์มินิมอลคือ?", a: ["ของเยอะ", "น้อยแต่มาก (Minimal)", "ทองคำเยอะ", "รกๆ"], c: 1},
-        {q: "18. ห้องนอนควรเน้นโทนสีใด?", a: ["แดงสด", "โทนอ่อน/เย็น", "ดำสนิท", "เหลืองจ้า"], c: 1},
-        {q: "19. ปัจจัยในการเลี้ยงสัตว์คืออะไร?", a: ["เงินทุน", "ตลาด", "ความรู้", "ถูกทุกข้อ"], c: 3},
-        {q: "20. เครื่องมือใดใช้ตัดกิ่งขนาดเล็ก?", a: ["จอบ", "กรรไกรตัดกิ่ง", "เลื่อยวงเดือน", "เสียม"], c: 1}
+    his: { title: "HISTORY (40 Qs)", data: [
+        {q: "1. อาเซียนก่อตั้งที่จังหวัดใด?", a: ["กรุงเทพฯ", "ภูเก็ต", "เชียงใหม่", "ชลบุรี"], c: 0},
+        {q: "2. สัญลักษณ์อาเซียนคือรวงข้าวมีกี่ต้น?", a: ["5", "8", "10", "12"], c: 2},
+        {q: "3. สีน้ำเงินในธงอาเซียนหมายถึง?", a: ["สันติภาพ", "ความกล้าหาญ", "ความบริสุทธิ์", "ความรุ่งเรือง"], c: 0},
+        {q: "4. สีแดงในธงอาเซียนหมายถึง?", a: ["สันติภาพ", "ความกล้าหาญ", "ความบริสุทธิ์", "ความรุ่งเรือง"], c: 1},
+        {q: "5. สำนักงานใหญ่อาเซียนตั้งอยู่ที่ใด?", a: ["ไทย", "อินโดนีเซีย", "สิงคโปร์", "มาเลเซีย"], c: 1},
+        {q: "6. วันอาเซียนคือวันที่เท่าไหร่?", a: ["1 ส.ค.", "8 ส.ค.", "12 ส.ค.", "31 ส.ค."], c: 1},
+        {q: "7. คำขวัญอาเซียนคือ?", a: ["หนึ่งวิสัยทัศน์ฯ", "สามัคคีคือพลัง", "ก้าวไกลอาเซียน", "รักกันอาเซียน"], c: 0},
+        {q: "8. ประเทศล่าสุดที่เข้าอาเซียน (ประเทศที่ 10)?", a: ["กัมพูชา", "เวียดนาม", "ลาว", "พม่า"], c: 0},
+        {q: "9. นครวัดตั้งอยู่ในประเทศใด?", a: ["ไทย", "ลาว", "กัมพูชา", "พม่า"], c: 2},
+        {q: "10. บรูไนมีความมั่งคั่งจากอะไร?", a: ["การเกษตร", "น้ำมันและก๊าซ", "การท่องเที่ยว", "ประมง"], c: 1},
+        {q: "11. ประเทศใดไม่มีทางออกสู่ทะเล?", a: ["ลาว", "พม่า", "เวียดนาม", "กัมพูชา"], c: 0},
+        {q: "12. สิงคโปร์แยกตัวออกจากประเทศใด?", a: ["ไทย", "อินโดนีเซีย", "มาเลเซีย", "ฟิลิปปินส์"], c: 2},
+        {q: "13. สกุลเงินของอินโดนีเซียคือ?", a: ["บาท", "ดอลลาร์", "รูเปียห์", "กีบ"], c: 2},
+        {q: "14. เมืองหลวงของเวียดนามคือ?", a: ["โฮจิมินห์", "ฮานอย", "ดานัง", "เว้"], c: 1},
+        {q: "15. ประเทศใดไม่เคยเป็นอาณานิคมของตะวันตก?", a: ["ไทย", "พม่า", "ฟิลิปปินส์", "มาเลเซีย"], c: 0},
+        {q: "16. ศาสนาหลักของอินโดนีเซียคือ?", a: ["พุทธ", "คริสต์", "อิสลาม", "ฮินดู"], c: 2},
+        {q: "17. ฟิลิปปินส์เคยเป็นอาณานิคมของประเทศใด?", a: ["อังกฤษ", "สเปน", "ฝรั่งเศส", "เนเธอร์แลนด์"], c: 1},
+        {q: "18. กัมพูชาเคยเป็นอาณานิคมของประเทศใด?", a: ["อังกฤษ", "สเปน", "ฝรั่งเศส", "อเมริกา"], c: 2},
+        {q: "19. เมียนมาเคยเป็นอาณานิคมของประเทศใด?", a: ["อังกฤษ", "ฝรั่งเศส", "จีน", "ญี่ปุ่น"], c: 0},
+        {q: "20. สกุลเงินของมาเลเซียคือ?", a: ["บาท", "จ๊าด", "ริงกิต", "ดอง"], c: 2},
+        {q: "21. ดอกไม้ประจำชาติไทยคือ?", a: ["กุหลาบ", "ราชพฤกษ์", "มะลิ", "กล้วยไม้"], c: 1},
+        {q: "22. สัตว์ประจำชาติไทยคือ?", a: ["ช้าง", "เสือ", "มังกร", "สิงโต"], c: 0},
+        {q: "23. เมืองหลวงของลาวคือ?", a: ["เวียงจันทน์", "หลวงพระบาง", "ปากเซ", "สะหวันนะเขต"], c: 0},
+        {q: "24. เมืองหลวงของฟิลิปปินส์คือ?", a: ["เซบู", "มะนิลา", "ดาเวา", "เกซอน"], c: 1},
+        {q: "25. สกุลเงินของลาวคือ?", a: ["บาท", "ดอลลาร์", "กีบ", "เรียล"], c: 2},
+        {q: "26. สกุลเงินของกัมพูชาคือ?", a: ["ดอง", "เรียล", "จ๊าด", "บาท"], c: 1},
+        {q: "27. สกุลเงินของเวียดนามคือ?", a: ["ดอง", "บาท", "กีบ", "จ๊าด"], c: 0},
+        {q: "28. ประเทศที่มีประชากรมากที่สุดในอาเซียน?", a: ["ไทย", "เวียดนาม", "อินโดนีเซีย", "ฟิลิปปินส์"], c: 2},
+        {q: "29. ประเทศที่เป็นหมู่เกาะใหญ่ที่สุด?", a: ["อินโดนีเซีย", "ฟิลิปปินส์", "มาเลเซีย", "ไทย"], c: 0},
+        {q: "30. ติมอร์-เลสเต ขอเข้าอาเซียนปีใด (ค.ศ.)?", a: ["2000", "2011", "2022", "2023"], c: 2},
+        {q: "31. ข้าวหอมมะลิเป็นสินค้าส่งออกของประเทศใด?", a: ["ไทย", "สิงคโปร์", "บรูไน", "อินโดนีเซีย"], c: 0},
+        {q: "32. เพลงประจำอาเซียนชื่อว่า?", a: ["Asean Way", "Unity Song", "Love Asean", "Hello Asean"], c: 0},
+        {q: "33. พม่าเปลี่ยนชื่อเป็นเมียนมาปีใด?", a: ["2532", "2540", "2550", "2560"], c: 0},
+        {q: "34. ศาสนาพุทธนิกายเถรวาทเป็นศาสนาหลักในประเทศใด?", a: ["ไทย", "มาเลเซีย", "อินโดนีเซีย", "ฟิลิปปินส์"], c: 0},
+        {q: "35. เมืองกัวลาลัมเปอร์เป็นเมืองหลวงของ?", a: ["ไทย", "อินโดนีเซีย", "สิงคโปร์", "มาเลเซีย"], c: 3},
+        {q: "36. ชุดประจำชาติอ่าวหญ่ายเป็นของประเทศใด?", a: ["ไทย", "เวียดนาม", "พม่า", "ลาว"], c: 1},
+        {q: "37. บาหลีเป็นแหล่งท่องเที่ยวในประเทศใด?", a: ["ไทย", "ฟิลิปปินส์", "อินโดนีเซีย", "มาเลเซีย"], c: 2},
+        {q: "38. แม่น้ำโขงไหลผ่านกี่ประเทศในอาเซียน?", a: ["3", "4", "5", "6"], c: 2},
+        {q: "39. ภาษากลางที่ใช้ในอาเซียนคือ?", a: ["ไทย", "จีน", "อังกฤษ", "มลายู"], c: 2},
+        {q: "40. อาเซียนก่อตั้งขึ้นเพื่อ?", a: ["รบกัน", "การค้า", "ร่วมมือเศรษฐกิจ/สังคม", "ท่องเที่ยว"], c: 2}
     ]},
-    fun: { title: "วิชา เผื่อเครียด (10 ข้อ)", questions: [
-        {q: "1. ตูดใหญ่สุด?", a: ["ไซม่อน", "ลมเหนือ", "หยก", "t.tim"], c: 0},
-        {q: "2. สิ่งที่พี่มาร์คเกลียดที่สุด?", a: ["สก๊อย", "แม่นุช", "game bang", "ไดม่อน"], c: 0},
-        {q: "3. สิ่งที่พี่มาร์คชอบที่สุด?", a: ["หี", "ตูด", "นม", "อื่นๆ"], c: 3, type: "input"},
-        {q: "4. ออนิเมะที่พี่มาร์คคิดว่าเจ๋งที่สุด?", a: ["frieren", "keroro", "kuroko", "myhero academia"], c: 0},
-        {q: "5. สิ่งที่พีทชอบที่สุด?", a: ["pussy", "ass", "นม", "อื่นๆ"], c: 3, type: "input"},
-        {q: "6. สาวที่มาร์คคิดว่าสวยสุดใน Aespa?", a: ["จีเซล", "คาริน่า", "วินเทอร์", "หยก"], c: 1},
-        {q: "7. ตัวละครในศึกคนชนเทพที่พี่มาร์คชอบที่สุด?", a: ["ซิโม่", "JACKเดอะริปเปอร์", "อดัม", "ฮ่องเต้"], c: 1},
-        {q: "8. มาร์คชอบสาวแบบไหน?", a: ["แว่น นมใหญ่", "แว่นตูดใหญ่", "แว่น น่ารัก ไม่สก๊อย", "ถูกทุกข้อ"], c: 3},
-        {q: "9. มาร์คชอบตัวละครไหนใน HXH?", a: ["hisoka", "kilua", "fetian", "kurapika"], c: 2},
-        {q: "10. ทีมฟุตบอลที่มาร์คเชียร์?", a: ["liverpool", "เชลชี", "แมนยู", "แมนชิตี้"], c: 0}
+    car: { title: "การงานอาชีพ (20 Qs)", data: [
+        {q: "1. อุปกรณ์ใดใช้พรวนดิน?", a: ["จอบ", "ส้อมพรวน", "เสียม", "พลั่ว"], c: 1},
+        {q: "2. การย้ายต้นกล้าควรใช้?", a: ["ช้อนปลูก", "มือเปล่า", "เสียม", "จอบ"], c: 0},
+        {q: "3. รดน้ำต้นไม้เวลาใดดีที่สุด?", a: ["เที่ยง", "บ่าย", "เช้าและเย็น", "ก่อนนอน"], c: 2},
+        {q: "4. ปุ๋ยคอกทำมาจากอะไร?", a: ["มูลสัตว์", "ใบไม้แห้ง", "สารเคมี", "เศษหิน"], c: 0},
+        {q: "5. การถูพื้นควรทำอย่างไร?", a: ["ถูจากข้างในออกข้างนอก", "ถูจากข้างนอกเข้าข้างใน", "ถูตรงกลางก่อน", "ถูยังไงก็ได้"], c: 0},
+        {q: "6. อุปกรณ์ใดใช้กวาดพื้นปูนซีเมนต์ขัดหยาบ?", a: ["ไม้กวาดดอกหญ้า", "ไม้กวาดทางมะพร้าว", "ไม้กวาดขนไก่", "ไม้กวาดพลาสติก"], c: 1},
+        {q: "7. การทำความสะอาดตู้เย็นควรทำอย่างไรก่อน?", a: ["เอาน้ำฉีด", "ถอดปลั๊ก", "เปิดประตูทิ้งไว้", "ใช้แปรงขัด"], c: 1},
+        {q: "8. การซักผ้าควรแยกผ้าสีและผ้าขาวเพราะ?", a: ["ผ้าจะขาด", "สีจะตกใส่ผ้าขาว", "ประหยัดน้ำ", "ผ้าจะสะอาดกว่า"], c: 1},
+        {q: "9. การรีดผ้าควรเริ่มจากส่วนใดก่อน?", a: ["ปกเสื้อ", "ชายเสื้อ", "แขนเสื้อ", "ตัวเสื้อ"], c: 0},
+        {q: "10. การถนอมอาหารด้วยการตากแห้งใช้พลังงานจาก?", a: ["ไฟฟ้า", "แสงอาทิตย์", "ถ่าน", "ลม"], c: 1},
+        {q: "11. ไข่เค็มเป็นการถนอมอาหารวิธีใด?", a: ["การเชื่อม", "การดอง", "การกวน", "การตากแห้ง"], c: 1},
+        {q: "12. อาชีพที่ผลิตสินค้าคืออาชีพใด?", a: ["ช่างตัดผม", "ชาวนา", "คนขับรถแท็กซี่", "หมอ"], c: 1},
+        {q: "13. การเลือกซื้อเนื้อหมูควรเลือกสีใด?", a: ["สีชมพูอ่อน", "สีแดงเข้ม", "สีเขียว", "สีดำ"], c: 0},
+        {q: "14. ผักชนิดใดมีวิตามินเอสูง?", a: ["คะน้า", "ฟักทอง", "กะหล่ำปลี", "ผักบุ้ง"], c: 1},
+        {q: "15. มะม่วงกวนเป็นการถนอมอาหารวิธีใด?", a: ["การกวน", "การเชื่อม", "การดอง", "การรมควัน"], c: 0},
+        {q: "16. วัสดุที่เหลือใช้ในบ้านเรียกว่า?", a: ["ขยะ", "ทรัพยากร", "วัสดุเหลือใช้", "ของเสีย"], c: 2},
+        {q: "17. การล้างจานควรล้างสิ่งใดก่อน?", a: ["แก้วน้ำ", "จานข้าว", "กระทะ", "หม้อ"], c: 0},
+        {q: "18. งานบ้านประเภทใดช่วยประหยัดรายจ่าย?", a: ["การกวาดบ้าน", "การซ่อมแซมเสื้อผ้า", "การถูบ้าน", "การทิ้งขยะ"], c: 1},
+        {q: "19. มารยาทในการทำงานร่วมกับผู้อื่นคือ?", a: ["เอาแต่ใจ", "รับฟังความคิดเห็น", "สั่งคนอื่น", "ไม่ช่วยทำ"], c: 1},
+        {q: "20. เป้าหมายของการจัดสวนคือ?", a: ["ความสวยงาม", "ความสะอาด", "เอาไว้อวดคนอื่น", "ให้คนมาเช่า"], c: 0}
+    ]},
+    dan: { title: "นาฎศิลป์ (20 Qs)", data: [
+        {q: "1. จีบหงายหักข้อมือไปทางใด?", a: ["เข้าหาลำแขน", "ออกนอกตัว", "ลงข้างล่าง", "ขึ้นข้างบน"], c: 0},
+        {q: "2. การตั้งวงบน ปลายนิ้วอยู่ระดับใด?", a: ["ระดับอก", "ระดับปาก", "ระดับหางคิ้ว", "ระดับสะเอว"], c: 2},
+        {q: "3. วงล่าง ปลายนิ้วอยู่ระดับใด?", a: ["ระดับสะดือ", "ระดับเข่า", "ระดับชายพก", "ระดับหน้าท้อง"], c: 2},
+        {q: "4. ท่าตัวเรา มือซ้ายจีบอยู่ที่ใด?", a: ["แก้ม", "ปาก", "อก", "เอว"], c: 2},
+        {q: "5. การประเท้าคือการทำอย่างไร?", a: ["ใช้ส้นเท้าแตะพื้น", "ใช้จมูกเท้าตบพื้นเบาๆ", "การกระทืบเท้า", "การเดินถอยหลัง"], c: 1},
+        {q: "6. การรำวงมาตรฐานมีกี่เพลง?", a: ["5", "8", "10", "12"], c: 2},
+        {q: "7. เพลงแรกของรำวงมาตรฐานคือเพลงใด?", a: ["ชาวไทย", "งามแสงเดือน", "รำซิมรำ", "คืนเดือนหงาย"], c: 1},
+        {q: "8. เพลงงามแสงเดือน ใช้ท่ารำใด?", a: ["ท่าสอดสร้อยมาลา", "ท่ารำส่าย", "ท่าพรหมสี่หน้า", "ท่าช้างประสานงา"], c: 0},
+        {q: "9. ภาษาท่าทางนาฎศิลป์ที่ใช้แทนคำว่า 'ท่าน' คือ?", a: ["จีบอก", "มือข้างหนึ่งแบหงาย", "ตะแคงตัว", "ก้มหน้า"], c: 1},
+        {q: "10. ละครชาตรีเป็นละครประเภทใด?", a: ["ละครรำ", "ละครสมัยใหม่", "ละครต่างชาติ", "ละครพูด"], c: 0},
+        {q: "11. โขนแต่งกายตามแบบใด?", a: ["ชุดลำลอง", "ชุดยืนเครื่อง", "ชุดกีฬา", "ชุดราตรี"], c: 1},
+        {q: "12. ทศกัณฐ์เป็นตัวละครประเภทใด?", a: ["ตัวพระ", "ตัวนาง", "ตัวยักษ์", "ตัวลิง"], c: 2},
+        {q: "13. หนุมานเป็นลิงสีอะไร?", a: ["แดง", "เขียว", "ขาว", "ดำ"], c: 2},
+        {q: "14. การตีเหล็ก หรือตีจังหวะในวงปี่พาทย์ใช้เครื่องดนตรีใด?", a: ["ฉิ่ง", "ระนาด", "ซอ", "ขลุ่ย"], c: 0},
+        {q: "15. เพลงรำวงมาตรฐานพัฒนามาจากอะไร?", a: ["รำวงพื้นเมือง", "รำโทน", "ระบำชุด", "เต้นกำรำเคียว"], c: 1},
+        {q: "16. ท่ารำสอดสร้อยมาลาแปลง ใช้ในเพลงใด?", a: ["คืนเดือนหงาย", "ดวงจันทร์ขวัญฟ้า", "ยอดชายใจหาญ", "ดวงจันทร์วันเพ็ญ"], c: 1},
+        {q: "17. ตัวนางในนาฎศิลป์หมายถึง?", a: ["ผู้ชายแสดง", "ตัวละครหญิง", "ตัวละครตลก", "ตัวละครสัตว์"], c: 1},
+        {q: "18. การกระทุ้งเท้าต้องทำอย่างไร?", a: ["ใช้จมูกเท้ากระแทกพื้น", "ใช้ส้นเท้าตบพื้น", "ใช้หลังเท้าแตะพื้น", "ใช้เท้าทั้งสองข้างกระโดด"], c: 0},
+        {q: "19. ดนตรีที่ใช้ประกอบการแสดงโขนคือ?", a: ["วงปี่พาทย์", "วงเครื่องสาย", "วงมโหรี", "วงโยธวาทิต"], c: 0},
+        {q: "20. นาฎศิลป์มีที่มาจากอะไร?", a: ["การเลียนแบบธรรมชาติ", "ความเชื่อทางศาสนา", "การละเล่น", "ทุกข้อ"], c: 3}
     ]}
 };
 
-const itemPool = [
-    {n: "🐙 ระเบิดหมึก", t: "ink", d: "พ่นหมึกบังจอเพื่อน"},
-    {n: "💡 แฟลชแบง", t: "flash", d: "จอขาวแสบตา"},
-    {n: "❄️ แช่แข็ง", t: "freeze", d: "ปุ่มกดไม่ได้ 3 วิ"},
-    {n: "😵 จอเบลอ", t: "blur", d: "โจทย์เบลอมองยาก"},
-    {n: "🌪️ พายุสั่น", t: "shake", d: "จอเขย่ารัวๆ"},
-    {n: "🎭 สลับสี", t: "invert", d: "สีจอเพี้ยน"},
-    {n: "💰 ปล้นแต้ม", t: "steal", d: "ขโมย 1,000 แต้ม"},
-    {n: "💣 ระเบิดแต้ม", t: "bomb", d: "หักแต้มสุ่ม 500-2,000"},
-    {n: "💤 หลับใน", t: "sleep", d: "บังจอด้วยรูปคนหลับ"},
-    {n: "🚫 ล็อคปุ่ม", t: "lock", d: "ล็อคปุ่มกด"}
-];
+// ================= [ GAME LOGIC ] =================
+const config = {
+    apiKey: "AIzaSyAVAd78Y9OUKFdfkPsV96uj2IjFwWu1rAc",
+    databaseURL: "https://mark-d1f3f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "mark-d1f3f"
+};
+firebase.initializeApp(config);
+const db = firebase.database();
 
-const app = {
-    user: '', isAdmin: false, currentSub: '', qIdx: 0, score: 0, timer: null,
-    login() {
-        const n = document.getElementById('input-user').value.trim();
-        if(!n) return alert("ใส่ชื่อด้วยมาร์ค!");
-        this.user = n;
-        if(n.toLowerCase() === 'mark') {
-            this.isAdmin = true;
-            document.getElementById('admin-badge').style.display = 'inline';
-            document.getElementById('admin-panel').style.display = 'block';
-            this.renderAdminMenu();
-        }
-        document.getElementById('user-name').innerText = n;
-        document.getElementById('user-tag').classList.remove('hidden');
-        this.switchPage('menu');
-        this.sync();
-        this.listenAttacks();
-    },
-    renderAdminMenu() {
-        const grid = document.getElementById('admin-menu-grid');
-        grid.innerHTML = "";
-        for(let key in quizData) {
-            const b = document.createElement('button');
-            b.className = 'btn'; b.style.fontSize = '0.8rem';
-            b.innerText = quizData[key].title;
-            b.onclick = () => db.ref('party/status').set({ state: 'playing', subject: key, qIdx: 0 });
-            grid.appendChild(b);
-        }
-    },
-    toggleGameMode(active) {
-        db.ref('party/settings/gamemode').set(active);
+const core = {
+    user: '', sub: '', qIdx: 0, score: 0, mode: '', timer: null,
+    init(m) {
+        this.user = document.getElementById('in-user').value.trim();
+        if(!this.user) return alert("ใส่ชื่อด้วยบอส!");
+        this.mode = m;
+        if(this.user.toLowerCase() === 'mark') document.getElementById('adm-panel').classList.remove('hidden');
+        if(m === 'party') this.sync(); else this.start('sci');
     },
     sync() {
-        db.ref('party/status').on('value', snap => {
-            const s = snap.val(); if(!s) return;
-            if(s.state === 'playing') { this.currentSub = s.subject; this.qIdx = s.qIdx; this.startRound(); }
-            else if(s.state === 'ranking') { this.switchPage('rank'); }
+        db.ref('status').on('value', s => {
+            const v = s.val(); if(!v) return;
+            if(v.state === 'play') { this.sub = v.sub; this.qIdx = v.idx; this.render(); }
+            else { this.show('lobby'); }
         });
-        db.ref('party/settings/gamemode').on('value', snap => {
-            const active = snap.val();
-            const body = document.getElementById('main-body');
-            if(active) body.classList.add('gamemode-active');
-            else body.classList.remove('gamemode-active');
-        });
-        db.ref('scores').on('value', snap => {
-            const data = snap.val() ? Object.values(snap.val()) : [];
-            document.getElementById('leader-table-body').innerHTML = data.sort((a,b)=>b.score-a.score).slice(0,10).map(i=>`<tr><td>${i.name}</td><td>${i.score}</td></tr>`).join('');
-        });
-        db.ref('public_comments').on('value', snap => {
-            const comms = snap.val(); const div = document.getElementById('public-comments'); div.innerHTML = "";
-            if(comms) Object.keys(comms).reverse().forEach(k => {
-                const c = comms[k]; div.innerHTML += `<span class="comment-tag">${c.user}: ${c.text} ${this.isAdmin ? `<button onclick="app.delMsg('${k}')" style="border:none;color:red;">x</button>` : ''}</span>`;
-            });
-        });
+        db.ref('attacks/'+this.user).on('value', s => { if(s.val()) this.atk(s.val().t); });
     },
-    startRound() {
-        this.switchPage('quiz');
-        const q = quizData[this.currentSub].questions[this.qIdx];
-        document.getElementById('q-title').innerText = q.q;
-        document.getElementById('input-area').className = q.type === 'input' ? '' : 'hidden';
-        const container = document.getElementById('opt-container'); container.innerHTML = "";
-        q.a.forEach((txt, i) => {
-            const b = document.createElement('button'); b.className = 'option'; b.innerText = txt;
-            b.onclick = () => this.check(i, b); container.appendChild(b);
+    start(s) {
+        if(this.mode === 'party') db.ref('status').set({ state: 'play', sub: s, idx: 0 });
+        else { this.sub = s; this.qIdx = 0; this.render(); }
+    },
+    show(id) {
+        ['v-lobby','v-quiz','v-blooket'].forEach(v => document.getElementById(v).classList.add('hidden'));
+        document.getElementById('v-'+id).classList.remove('hidden');
+    },
+    render() {
+        this.show('quiz');
+        const q = QUESTIONS[this.sub].data[this.qIdx];
+        document.getElementById('q-sub').innerText = QUESTIONS[this.sub].title + ` [${this.qIdx+1}/${QUESTIONS[this.sub].data.length}]`;
+        document.getElementById('q-txt').innerText = q.q;
+        const box = document.getElementById('opt-box'); box.innerHTML = '';
+        q.a.forEach((t, i) => {
+            const b = document.createElement('button');
+            b.className = `opt opt-${i}`; b.innerText = t;
+            b.onclick = () => this.check(i, q.c); box.appendChild(b);
         });
-        document.getElementById('admin-next-area').className = this.isAdmin ? '' : 'hidden';
-        let count = 10; document.getElementById('timer').innerText = count;
+        let sec = 15; document.getElementById('timer').innerText = sec;
         clearInterval(this.timer);
-        this.timer = setInterval(() => { count--; document.getElementById('timer').innerText = count; if(count <= 0) { clearInterval(this.timer); this.lockAll(); } }, 1000);
+        this.timer = setInterval(() => {
+            sec--; document.getElementById('timer').innerText = sec;
+            if(sec <= 0) { clearInterval(this.timer); this.next(); }
+        }, 1000);
     },
-    check(i, btn) {
-        clearInterval(this.timer); const q = quizData[this.currentSub].questions[this.qIdx];
-        if(i === q.c) { btn.classList.add('correct'); this.score += 100 + (parseInt(document.getElementById('timer').innerText) * 10); db.ref('scores/'+this.user).set({name:this.user, score:this.score}); document.getElementById('reward-section').classList.remove('hidden'); }
-        else { btn.classList.add('wrong'); document.querySelectorAll('.option')[q.c].classList.add('correct'); }
-        if(q.type === 'input' && i === 3) { const val = document.getElementById('custom-answer').value.trim(); if(val) db.ref('public_comments').push({user:this.user, text:val}); }
-        this.lockAll();
+    check(p, c) {
+        clearInterval(this.timer);
+        if(p === c) {
+            this.score += 100;
+            db.ref('scores/'+this.user).set({ n: this.user, s: this.score });
+            if(this.mode === 'party') this.show('blooket'); else this.next();
+        } else { this.next(); }
     },
-    lockAll() { document.querySelectorAll('.option').forEach(b => b.disabled = true); setTimeout(() => this.switchPage('rank'), 2000); },
-    rollItem() {
-        const item = itemPool[Math.floor(Math.random() * itemPool.length)];
-        db.ref('scores').once('value', snap => {
-            const players = snap.val(); const targets = Object.keys(players).filter(p => p !== this.user);
-            document.getElementById('item-action-area').innerHTML = `<p>ได้: <b>${item.n}</b></p>` + targets.map(t => `<button class="target-btn" onclick="app.useItem('${t}', '${item.t}')">แกล้ง ${t}</button>`).join('');
+    openChest() {
+        const item = Math.random() > 0.5 ? 'INK' : 'FLASH';
+        document.getElementById('item-got').innerText = "ได้รับ: " + item + "!";
+        document.getElementById('atk-box').classList.remove('hidden');
+        db.ref('scores').once('value', s => {
+            const list = Object.keys(s.val() || {}).filter(u => u !== this.user);
+            document.getElementById('target-list').innerHTML = list.map(u => `<button class="btn-gp" style="font-size:1rem;" onclick="core.sendAtk('${u}','${item}')">ATTACK ${u}</button>`).join('');
         });
     },
-    useItem(target, type) { db.ref('party/attacks/'+target).set({type, from:this.user}); document.getElementById('reward-section').classList.add('hidden'); alert("ส่งไปแล้ว!"); },
-    listenAttacks() {
-        db.ref('party/attacks/'+this.user).on('value', snap => {
-            const atk = snap.val(); if(atk) { this.applyEffect(atk.type); db.ref('party/attacks/'+this.user).remove(); }
-        });
+    sendAtk(u, t) {
+        db.ref('attacks/'+u).set({ t: t.toLowerCase() });
+        this.show('quiz'); document.getElementById('opt-box').innerHTML = '<h2>รอข้อถัดไป...</h2>';
+        document.getElementById('atk-box').classList.add('hidden');
     },
-    applyEffect(type) {
-        const overlay = document.getElementById('effect-overlay'); overlay.style.display = 'block'; overlay.innerHTML = "";
-        if(type === 'ink') { for(let i=0; i<6; i++) { const img = document.createElement('img'); img.src = 'https://www.pngarts.com/files/1/Ink-Splatter-PNG-Transparent-Image.png'; img.className = 'ink-splat'; img.style.left = Math.random()*70+'%'; img.style.top = Math.random()*70+'%'; overlay.appendChild(img); } }
-        else if(type === 'flash') overlay.innerHTML = '<div class="flash-bang"></div>';
-        else if(type === 'freeze') { document.body.classList.add('freeze-overlay'); document.querySelectorAll('.option').forEach(b => b.disabled = true); }
-        else if(type === 'blur') document.getElementById('view-quiz').style.filter = 'blur(15px)';
-        else if(type === 'shake') document.body.classList.add('glitch-effect');
-        else if(type === 'invert') document.body.style.filter = 'invert(1) hue-rotate(90deg)';
-        else if(type === 'steal') { this.score -= 1000; db.ref('scores/'+this.user).update({score:this.score}); alert("โดนปล้น 1,000 แต้ม!"); }
-        else if(type === 'bomb') { const m = Math.floor(Math.random()*1500)+500; this.score -= m; db.ref('scores/'+this.user).update({score:this.score}); alert(`โดนระเบิด -${m}!`); }
-        else if(type === 'sleep') overlay.innerHTML = '<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJndXo3Z3R4bmR4eXh4eXh4eXh4eXh4eXh4eXh4eXh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mGu6C6A035m8M/giphy.gif" style="width:100%;height:100%;object-fit:cover">';
-        else if(type === 'lock') overlay.innerHTML = '<h1 style="color:red;text-align:center;margin-top:200px;font-size:5rem">LOCKED!</h1>';
-        setTimeout(() => { overlay.style.display = 'none'; document.body.classList.remove('freeze-overlay', 'glitch-effect'); document.body.style.filter = 'none'; document.getElementById('view-quiz').style.filter = 'none'; }, 3000);
+    atk(t) {
+        const o = document.getElementById('overlay'); o.style.display = 'block';
+        o.style.background = t === 'ink' ? 'black' : 'white';
+        setTimeout(() => { o.style.display = 'none'; db.ref('attacks/'+this.user).remove(); }, 2500);
     },
-    adminNext() {
-        const next = this.qIdx + 1;
-        if(next < quizData[this.currentSub].questions.length) db.ref('party/status').update({ qIdx: next });
-        else { db.ref('party/status').set({ state: 'ranking' }); alert("จบเกม!"); }
-    },
-    delMsg(k) { db.ref('public_comments/'+k).remove(); },
-    clearScores() { if(confirm("ล้างคะแนน?")) db.ref('scores').remove(); },
-    switchPage(id) { ['view-login', 'view-menu', 'view-quiz', 'view-rank'].forEach(v => document.getElementById(v).classList.add('hidden')); document.getElementById('view-'+id).classList.remove('hidden'); }
+    next() {
+        if(this.mode === 'party' && this.user.toLowerCase() === 'mark') {
+            db.ref('status').update({ idx: this.qIdx + 1 });
+        } else if(this.mode === 'solo') {
+            if(this.qIdx < QUESTIONS[this.sub].data.length - 1) { this.qIdx++; this.render(); }
+            else { alert("จบแล้วครับบอส!"); this.show('lobby'); }
+        }
+    }
 };
+window.onkeydown = (e) => { if(e.code === 'Space' && core.user.toLowerCase() === 'mark') core.next(); };
 </script>
 </body>
 </html>
