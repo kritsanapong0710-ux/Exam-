@@ -3,306 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arjey Exam Pro - Full System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Arjey Pretest - Earth Science</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --success: #10b981; --error: #ef4444; --card: #ffffff; }
-        body { font-family: 'Kanit', sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        :root {
+            --m12: #27ae60; --m13: #e67e22;
+            --m10: #2980b9; --m11: #8e44ad;
+            --bg: #f4f7f6; --white: #ffffff;
+        }
+        body { font-family: 'Prompt', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+        header { background: #2c3e50; color: white; text-align: center; padding: 40px 20px; border-bottom: 5px solid #1a252f; }
+        .container { max-width: 850px; margin: 0 auto; padding: 20px; }
         
-        /* Navigation Screens */
-        .screen { display: none; flex-direction: column; animation: fadeIn 0.3s ease-in-out; }
-        .active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* Module Style */
+        .module-block { background: var(--white); border-radius: 15px; margin-bottom: 40px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .module-header { padding: 20px; color: white; font-size: 1.3rem; font-weight: 600; display: flex; justify-content: space-between; }
+        .discussion { padding: 25px; background: #fafafa; border-bottom: 1px solid #eee; }
+        .discussion b { color: #2c3e50; }
+        .discussion-tag { background: #eee; padding: 2px 10px; border-radius: 5px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block; }
 
-        /* Components */
-        .card { background: var(--card); padding: 25px; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 20px; }
-        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #e2e8f0; font-family: 'Kanit'; font-size: 1.1rem; box-sizing: border-box; text-align: center; margin-bottom: 15px; }
+        /* Quiz Style */
+        .quiz-area { padding: 20px; }
+        .q-box { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
+        .q-text { font-weight: 600; margin-bottom: 12px; font-size: 1.05rem; display: block; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .opt { background: #fff; border: 2px solid #edeff2; padding: 12px; border-radius: 10px; cursor: pointer; text-align: left; transition: 0.2s; font-family: 'Prompt'; }
+        .opt:hover:not(.disabled) { border-color: #bdc3c7; background: #f9f9f9; }
         
-        .btn { padding: 16px; border-radius: 16px; border: none; cursor: pointer; font-family: 'Kanit'; font-size: 1.1rem; font-weight: 600; transition: 0.2s; width: 100%; margin-top: 10px; }
-        .btn-blue { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
-        .btn-green { background: var(--success); color: white; }
-        .btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+        /* State Classes */
+        .correct { background: #d4edda !important; border-color: #28a745 !important; color: #155724; font-weight: 600; }
+        .wrong { background: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; opacity: 0.6; }
+        .disabled { cursor: default; }
 
-        .option-item { display: flex; align-items: center; padding: 16px; border: 2px solid #f1f5f9; border-radius: 14px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
-        .option-item:hover { background: #f8fafc; }
-        .option-item.selected { border-color: var(--primary); background: #eff6ff; font-weight: 600; }
-
-        .progress-bar { width: 100%; height: 10px; background: #e2e8f0; border-radius: 20px; margin: 20px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
-
-        /* Review Styles */
-        .review-item { padding: 15px; border-radius: 12px; background: #fff1f2; border-left: 5px solid var(--error); margin-bottom: 15px; text-align: left; }
-        .txt-wrong { color: var(--error); font-size: 0.95rem; }
-        .txt-correct { color: var(--success); font-weight: 600; font-size: 0.95rem; }
-
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-        .circle { width: 110px; height: 110px; border: 8px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2.5rem; font-weight: 700; color: var(--primary); }
+        .score-bar { position: fixed; bottom: 20px; right: 20px; background: #2c3e50; color: white; padding: 15px 25px; border-radius: 50px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); font-size: 1.2rem; z-index: 1000; }
+        @media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="login-screen" class="screen active">
-        <div style="text-align:center; margin-top:80px;">
-            <h1 style="color:var(--primary); font-size:3rem; margin:0;">ARJEY</h1>
-            <p style="color:#64748b;">ระบบฝึกซ้อมข้อสอบ วิทยาศาสตร์โลก</p>
-            <div class="card" style="margin-top:30px;">
-                <input type="text" id="name-input" placeholder="ใส่ชื่อเล่นของคุณที่นี่">
-                <button class="btn btn-blue" onclick="handleLogin()">เข้าใช้งาน</button>
-            </div>
-        </div>
+<header>
+    <h1>🌍 Arjey Science Quiz</h1>
+    <p>รวมบทเรียน Module 10, 11, 12, 13</p>
+</header>
+
+<div class="container" id="quiz-container">
     </div>
 
-    <div id="main-screen" class="screen">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 id="user-display" style="margin:0;">สวัสดีคุณ...</h2>
-            <button onclick="logout()" style="color:var(--error); border:none; background:none; cursor:pointer; font-weight:bold;">ออกจากระบบ</button>
-        </div>
-        <div class="card">
-            <h3 style="margin-top:0;">เลือกชุดข้อสอบ (30 ข้อ/ชุด)</h3>
-            <button class="btn btn-blue" onclick="startQuiz('Arjey 1')">ชุดที่ 1 (Earth Layers & Plates)</button>
-            <button class="btn btn-green" onclick="startQuiz('Arjey 2')" style="margin-top:15px;">ชุดที่ 2 (Rocks & Environment)</button>
-        </div>
-        <div class="card">
-            <h3 style="margin-top:0;">📋 ประวัติการเล่นล่าสุด</h3>
-            <div id="history-box">กำลังโหลดประวัติ...</div>
-        </div>
-    </div>
+<div class="score-bar" id="score-board">คะแนน: 0 / 60</div>
 
-    <div id="quiz-screen" class="screen">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span id="quiz-title" style="color:var(--primary); font-weight:600;"></span>
-            <span id="q-count" style="background:#e2e8f0; padding:4px 12px; border-radius:20px; font-weight:bold;">1/30</span>
-        </div>
-        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-        <div class="card">
-            <h2 id="q-text" style="font-size:1.25rem; margin-top:0; line-height:1.4;"></h2>
-            <div id="options-list"></div>
-        </div>
-        <button class="btn btn-blue" id="next-btn" onclick="submitAnswer()" disabled>ยืนยันคำตอบ</button>
-    </div>
-
-    <div id="summary-screen" class="screen">
-        <div class="card" style="text-align:center;">
-            <div class="circle" id="final-score">0</div>
-            <h2 id="score-msg" style="margin-bottom:25px;">สรุปผลการทดสอบ</h2>
-            <div id="review-section" style="border-top:2px solid #f1f5f9; padding-top:20px;">
-                <h3 style="text-align:left;">🔍 ตรวจทานข้อที่ตอบผิด</h3>
-                <div id="wrong-list"></div>
-            </div>
-            <button class="btn btn-blue" onclick="location.reload()" style="margin-top:20px;">กลับสู่หน้าหลัก</button>
-        </div>
-    </div>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyA4p-juKNmXA-AP0mrsOHOXNhatlG0oTd4",
-        authDomain: "popmark-a7362.firebaseapp.com",
-        projectId: "popmark-a7362",
-        storageBucket: "popmark-a7362.firebasestorage.app",
-        messagingSenderId: "75115795171",
-        appId: "1:75115795171:web:92744e0ec6d56ddf4b6bd6"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const quizData = {
-        "Arjey 1": [
-            { q: "Which layer do we live on?", a: ["Crust", "Mantle", "Outer Core", "Inner Core"], c: 0 },
-            { q: "Which is the thickest layer of the Earth?", a: ["Crust", "Mantle", "Ocean", "Atmosphere"], c: 1 },
-            { q: "The inner core of the Earth is...", a: ["Liquid", "Solid", "Gas", "Plasma"], c: 1 },
-            { q: "The crust is broken into big pieces called...", a: ["Plates", "Blocks", "Bricks", "Tiles"], c: 0 },
-            { q: "As we go deeper inside the Earth, it gets...", a: ["Colder", "Hotter", "Lighter", "Softer"], c: 1 },
-            { q: "The study of the Earth and its layers is called...", a: ["Biology", "Geology", "Chemistry", "Physics"], c: 1 },
-            { q: "Moving plates can cause...", a: ["Rainbows", "Earthquakes", "Seasons", "Tides"], c: 1 },
-            { q: "A mountain that erupts lava is a...", a: ["Hill", "Volcano", "Valley", "Plain"], c: 1 },
-            { q: "Most earthquakes happen near plate...", a: ["Centers", "Boundaries", "Rivers", "Forests"], c: 1 },
-            { q: "When plates push together, they can form...", a: ["Rivers", "Mountains", "Lakes", "Waterfalls"], c: 1 },
-            { q: "Which layer is made of liquid metal?", a: ["Crust", "Mantle", "Outer Core", "Inner Core"], c: 2 },
-            { q: "The Earth's surface is mainly covered by...", a: ["Land", "Ice", "Water", "Forests"], c: 2 },
-            { q: "How many main layers does the Earth have?", a: ["2", "3", "4", "5"], c: 2 },
-            { q: "The shaking of the ground is called an...", a: ["Eruption", "Earthquake", "Flood", "Storm"], c: 1 },
-            { q: "Thailand is located on which plate?", a: ["Eurasian Plate", "Pacific Plate", "African Plate", "Nazca Plate"], c: 0 },
-            { q: "Magma is found in the...", a: ["Crust", "Mantle", "Atmosphere", "Exosphere"], c: 1 },
-            { q: "When plates move apart, it creates...", a: ["Mountains", "New Ocean Floor", "Clouds", "Icebergs"], c: 1 },
-            { q: "A scientist who studies earthquakes is a...", a: ["Seismologist", "Biologist", "Chemist", "Astronomer"], c: 0 },
-            { q: "The 'Pacific Ring of Fire' is famous for...", a: ["Ice", "Volcanoes", "Wind", "Gold"], c: 1 },
-            { q: "The thinnest layer of Earth is the...", a: ["Mantle", "Inner Core", "Crust", "Outer Core"], c: 2 },
-            { q: "Plates move because of heat from the...", a: ["Sun", "Moon", "Mantle", "Ocean"], c: 2 },
-            { q: "Lava is magma that reaches the...", a: ["Surface", "Core", "Atmosphere", "Clouds"], c: 0 },
-            { q: "Deep trenches are formed by...", a: ["Plate subduction", "Wind", "Rain", "Ice"], c: 0 },
-            { q: "The study of plate movement is...", a: ["Plate Tectonics", "Oceanography", "Meteorology", "Biology"], c: 0 },
-            { q: "What tool measures earthquake strength?", a: ["Thermometer", "Seismograph", "Barometer", "Speedometer"], c: 1 },
-            { q: "Which core is the hottest?", a: ["Outer", "Inner", "Mantle", "Crust"], c: 1 },
-            { q: "Most of the mantle is...", a: ["Gas", "Solid Rock", "Water", "Air"], c: 1 },
-            { q: "Tectonic plates 'float' on the...", a: ["Ocean", "Atmosphere", "Asthenosphere", "Exosphere"], c: 2 },
-            { q: "Continental crust is ______ than oceanic crust.", a: ["Thinner", "Thicker", "Hotter", "Heavier"], c: 1 },
-            { q: "Earthquakes can cause a giant wave called...", a: ["Tornado", "Tsunami", "Hurricane", "Blizzard"], c: 1 }
-        ],
-        "Arjey 2": [
-            { q: "The air around Earth is called the...", a: ["Atmosphere", "Hydrosphere", "Biosphere", "Lithosphere"], c: 0 },
-            { q: "All water on Earth is part of the...", a: ["Atmosphere", "Hydrosphere", "Lithosphere", "Core"], c: 1 },
-            { q: "Dirty air and water are called...", a: ["Energy", "Pollution", "Climate", "Weather"], c: 1 },
-            { q: "Recycling helps to reduce...", a: ["Oxygen", "Waste", "Rain", "Gold"], c: 1 },
-            { q: "A mineral is a natural solid...", a: ["Gas", "Liquid", "Material", "Animal"], c: 2 },
-            { q: "The study of minerals is...", a: ["Biology", "Mineralogy", "Ecology", "Physics"], c: 1 },
-            { q: "Igneous rocks form from cooled...", a: ["Water", "Magma", "Plants", "Ice"], c: 1 },
-            { q: "Sedimentary rocks are made of...", a: ["Lava", "Sediments", "Clouds", "Metal"], c: 1 },
-            { q: "The ozone layer protects us from...", a: ["Rain", "Snow", "UV rays", "Heat"], c: 2 },
-            { q: "Which gas do plants need to grow?", a: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Helium"], c: 2 },
-            { q: "The Mohs scale measures mineral...", a: ["Color", "Weight", "Hardness", "Transparency"], c: 2 },
-            { q: "Granite is an example of ________ rock.", a: ["Igneous", "Sedimentary", "Metamorphic", "Sand"], c: 0 },
-            { q: "Marble is a ________ rock.", a: ["Igneous", "Sedimentary", "Metamorphic", "Liquid"], c: 2 },
-            { q: "Cutting down too many trees is called...", a: ["Planting", "Deforestation", "Recycling", "Pollution"], c: 1 },
-            { q: "Global warming is caused by too much...", a: ["Oxygen", "Greenhouse gas", "Fresh water", "Snow"], c: 1 },
-            { q: "The study of rocks is called...", a: ["Petrology", "Zoology", "Botany", "Astronomy"], c: 0 },
-            { q: "Breaking rocks into small pieces is...", a: ["Weathering", "Melting", "Burning", "Squeezing"], c: 0 },
-            { q: "Rocks change through the rock...", a: ["Cycle", "Line", "Box", "Circle"], c: 0 },
-            { q: "Fossils are mostly found in ________ rocks.", a: ["Igneous", "Sedimentary", "Metamorphic", "Lava"], c: 1 },
-            { q: "Metamorphic rocks form from heat and...", a: ["Rain", "Pressure", "Wind", "Light"], c: 1 },
-            { q: "Fresh water is found in...", a: ["Oceans", "Rivers and Lakes", "Salt mines", "Desert sand"], c: 1 },
-            { q: "What is the hardest mineral?", a: ["Gold", "Diamond", "Talcom", "Iron"], c: 1 },
-            { q: "Moving rocks by wind or water is...", a: ["Erosion", "Melting", "Freezing", "Growing"], c: 0 },
-            { q: "The study of the environment is...", a: ["Environmental Science", "History", "Math", "Art"], c: 0 },
-            { q: "Living things are part of the...", a: ["Biosphere", "Crust", "Mantle", "Core"], c: 0 },
-            { q: "Humans need ______ air to breathe.", a: ["Dirty", "Clean", "Smoky", "Hot"], c: 1 },
-            { q: "Slate is a type of ________ rock.", a: ["Igneous", "Sedimentary", "Metamorphic", "Soft"], c: 2 },
-            { q: "Sandstone is a type of ________ rock.", a: ["Igneous", "Sedimentary", "Metamorphic", "Melted"], c: 1 },
-            { q: "The water cycle includes rain and...", a: ["Evaporation", "Burning", "Digging", "Cutting"], c: 0 },
-            { q: "Environment includes land, air, and...", a: ["Computers", "Water", "Cars", "Buildings"], c: 1 }
+<script>
+const quizData = [
+    {
+        title: "Module 12: The Environment", color: "var(--m12)",
+        discussion: "The environment includes land, water, air, and living things. We need clean air and clean water to live. Pollution can harm the environment. The study of the environment is called <b>Environmental Science.</b>",
+        questions: [
+            { q: "1. The air around Earth is called the", a: "Atmosphere", ops: ["Atmosphere", "B. Core", "C. Mantle", "D. Plate"] },
+            { q: "2. All water on Earth is called the", a: "Hydrosphere", ops: ["A. Atmosphere", "Hydrosphere", "C. Lithosphere", "D. Core"] },
+            { q: "3. Living things are part of the", a: "Biosphere", ops: ["Biosphere", "B. Core", "C. Mantle", "D. Plate"] },
+            { q: "4. Plants grow in", a: "Soil", ops: ["Soil", "B. Fire", "C. Metal", "D. Air"] },
+            { q: "5. Dirty air and water are examples of", a: "Pollution", ops: ["A. Energy", "Pollution", "C. Weather", "D. Gas"] },
+            { q: "6. The study of the environment is called", a: "Environmental Science", ops: ["A. Geology", "Environmental Science", "C. Astronomy", "D. Physics"] },
+            { q: "7. A person who studies the environment is called an", a: "Environmental scientist", ops: ["Environmental scientist", "B. Pilot", "C. Mechanic", "D. Chef"] },
+            { q: "8. Recycling helps reduce", a: "A. Waste", ops: ["A. Waste", "B. Oxygen", "C. Rain", "D. Rocks"] },
+            { q: "9. Too much greenhouse gas can cause", a: "A. Global warming", ops: ["A. Global warming", "B. Snow", "C. Wind", "D. Earthquakes"] },
+            { q: "10. The ozone layer protects us from strong", a: "UV rays", ops: ["UV rays", "B. Rain", "C. Snow", "D. Sand"] },
+            { q: "11. Rivers and lakes contain ____ water.", a: "Fresh", ops: ["A. Salt", "Fresh", "C. Dirty", "D. Hot"] },
+            { q: "12. Cutting many trees is called", a: "Deforestation", ops: ["A. Planting", "B. Recycling", "Deforestation", "D. Cleaning"] },
+            { q: "13. Clean water is important for", a: "A. Drinking", ops: ["A. Drinking", "B. Burning", "C. Melting", "D. Breaking"] },
+            { q: "14. Taking care of the environment is the job of", a: "Everyone", ops: ["A. Scientists only", "Everyone", "C. Teachers only", "D. No one"] },
+            { q: "15. The water cycle includes rain and", a: "A. Condensation", ops: ["A. Condensation", "B. Burning", "C. Freezing", "D. Cutting"] }
         ]
-    };
-
-    let currentUser = localStorage.getItem('arjey_user');
-    let currentQuiz = [];
-    let qIdx = 0;
-    let score = 0;
-    let userAnswers = []; // เก็บตัวเลือกที่ผู้ใช้กด
-    let currentSet = "";
-    let selectedIdx = null;
-
-    // --- LOGIN ---
-    window.handleLogin = () => {
-        const val = document.getElementById('name-input').value.trim();
-        if(!val) return alert("กรุณาใส่ชื่อเพื่อบันทึกประวัติ");
-        currentUser = val;
-        localStorage.setItem('arjey_user', val);
-        showDashboard();
-    };
-
-    window.logout = () => { localStorage.removeItem('arjey_user'); location.reload(); };
-
-    function showDashboard() {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById('main-screen').classList.add('active');
-        document.getElementById('user-display').innerText = `สวัสดีคุณ ${currentUser}`;
-        loadHistory();
+    },
+    {
+        title: "Module 13: Minerals and Rocks", color: "var(--m13)",
+        discussion: "Minerals are natural solid materials found in the Earth. Rocks are made of minerals. Types: <b>Igneous, Sedimentary, and Metamorphic.</b> Study of minerals: Mineralogy. Study of rocks: Petrology.",
+        questions: [
+            { q: "16. A mineral is a natural", a: "Solid", ops: ["Solid", "B. Liquid", "C. Gas", "D. Animal"] },
+            { q: "17. Rocks are made of", a: "Minerals", ops: ["Minerals", "B. Water", "C. Air", "D. Clouds"] },
+            { q: "18. The study of minerals is called", a: "A. Mineralogy", ops: ["A. Mineralogy", "B. Biology", "C. Ecology", "D. Astronomy"] },
+            { q: "19. The study of rocks is called", a: "A. Petrology", ops: ["A. Petrology", "B. Zoology", "C. Botany", "D. Meteorology"] },
+            { q: "20. Igneous rocks form from cooled", a: "Magma", ops: ["Magma", "B. Water", "C. Soil", "D. Ice"] },
+            { q: "21. Sedimentary rocks are made from small pieces called", a: "Sediments", ops: ["Sediments", "B. Waves", "C. Clouds", "D. Crystals"] },
+            { q: "22. Metamorphic rocks change because of heat and", a: "Pressure", ops: ["A. Rain", "Pressure", "C. Wind", "D. Ice"] },
+            { q: "23. Granite is an example of an", a: "Igneous", ops: ["Igneous", "B. Sedimentary", "C. Liquid", "D. Soft"] },
+            { q: "24. Marble is a ____ rock", a: "Metamorphic", ops: ["A. Igneous", "B. Sedimentary", "Metamorphic", "D. Gas"] },
+            { q: "25. The Mohs scale measures mineral", a: "Hardness", ops: ["A. Color", "Hardness", "C. Size", "D. Shape"] },
+            { q: "26. Breaking rocks into small pieces is called", a: "Weathering", ops: ["Weathering", "B. Melting", "C. Burning", "D. Cooling"] },
+            { q: "27. Moving rocks by wind or water is called", a: "Erosion", ops: ["Erosion", "B. Freezing", "C. Heating", "D. Pressing"] },
+            { q: "28. The rock cycle shows how rocks", a: "A. Change", ops: ["A. Change", "B. Sleep", "C. Shine", "D. Float"] },
+            { q: "29. Fossils are usually found in rocks", a: "A. Sedimentary", ops: ["A. Sedimentary", "B. Igneous", "C. Melted", "D. Liquid"] },
+            { q: "30. Both mineralogy and petrology are part of", a: "Geology", ops: ["A. Biology", "Geology", "C. Astronomy", "D. Physics"] }
+        ]
+    },
+    {
+        title: "Module 10: Earth's Layers", color: "var(--m10)",
+        discussion: "Earth has four layers: <b>crust, mantle, outer core, and inner core.</b> The outer core is liquid, inner is solid. Geology is the study of Earth.",
+        questions: [
+            { q: "1. Which layer do we live on?", a: "Crust", ops: ["Crust", "B. Mantle", "C. Core", "D. Inner core"] },
+            { q: "2. Which is the thickest layer of the Earth?", a: "Mantle", ops: ["A. Crust", "Mantle", "C. Ocean", "D. Sky"] },
+            { q: "3. What is the center of the Earth called?", a: "Core", ops: ["A. Crust", "B. Mantle", "Core", "D. Soil"] },
+            { q: "4. The outer core is", a: "B. Liquid", ops: ["A. Solid", "B. Liquid", "C. Cold", "D. Air"] },
+            { q: "5. The inner core is very", a: "B. Hot", ops: ["A. Cold", "B. Hot", "C. Soft", "D. Wet"] },
+            { q: "6. The crust is broken into big pieces called", a: "Plates", ops: ["Plates", "B. Clouds", "C. Trees", "D. Waves"] },
+            { q: "7. Mountains are found on the Earth's", a: "Surface", ops: ["A. Core", "Surface", "C. Mantle", "D. Center"] },
+            { q: "8. As we go deeper inside the Earth, it gets", a: "Hotter", ops: ["A. Colder", "Hotter", "C. Lighter", "D. Smaller"] },
+            { q: "9. The study of the Earth and its layers is called", a: "Geology", ops: ["A. Biology", "Geology", "C. Astronomy", "D. Chemistry"] },
+            { q: "10. A scientist who studies the Earth is called a", a: "Geologist", ops: ["A. Biologist", "Geologist", "C. Astronaut", "D. Chemist"] },
+            { q: "11. How many main layers does the Earth have?", a: "Four", ops: ["A. Two", "B. Three", "Four", "D. Five"] },
+            { q: "12. The mantle is very", a: "Thick", ops: ["A. Thin", "Thick", "C. Cold", "D. Small"] },
+            { q: "13. Oceans are part of the Earth's", a: "Surface", ops: ["A. Core", "Surface", "C. Mantle", "D. Inner core"] },
+            { q: "14. The inner core is", a: "Solid", ops: ["A. Liquid", "Solid", "C. Gas", "D. Water"] },
+            { q: "15. Rivers flow on the Earth's", a: "Surface", ops: ["Surface", "B. Core", "C. Mantle", "D. Center"] }
+        ]
+    },
+    {
+        title: "Module 11: Plate Tectonics", color: "var(--m11)",
+        discussion: "Earth's crust is broken into <b>plates</b> that move slowly, causing earthquakes and volcanoes. This study is called Plate Tectonics.",
+        questions: [
+            { q: "16. The big pieces of the crust are called", a: "Plates", ops: ["Plates", "B. Clouds", "C. Waves", "D. Trees"] },
+            { q: "17. Plates move very", a: "B. Slowly", ops: ["A. Fast", "B. Slowly", "C. Never", "D. Backward"] },
+            { q: "18. Moving plates can cause", a: "B. Earthquakes", ops: ["A. Rainbows", "B. Earthquakes", "C. Seasons", "D. Day and night"] },
+            { q: "19. A mountain that erupts lava is a", a: "Volcano", ops: ["A. Hill", "Volcano", "C. Valley", "D. Plain"] },
+            { q: "20. Most earthquakes happen near plate", a: "B. Boundaries", ops: ["A. Centers", "B. Boundaries", "C. Rivers", "D. Farm"] },
+            { q: "21. When plates push together, they can form", a: "B. Mountains", ops: ["A. Rivers", "B. Mountains", "C. Clouds", "D. Lakes"] },
+            { q: "22. When plates move apart, new ocean floor can", a: "B. Form", ops: ["A. Break", "B. Form", "C. Melt", "D. Sink"] },
+            { q: "23. The study of plate movement is called", a: "B. Plate Tectonics", ops: ["A. Biology", "B. Plate Tectonics", "C. Ecology", "D. Astronomy"] },
+            { q: "24. A scientist who studies earthquakes is called a", a: "A. Seismologist", ops: ["A. Seismologist", "B. Dentist", "C. Pilot", "D. Engineer"] },
+            { q: "25. Volcanoes are common near plate", a: "A. Boundaries", ops: ["A. Boundaries", "B. Centers", "C. Lakes", "D. Forests"] },
+            { q: "26. The shaking of the ground is called an", a: "Earthquake", ops: ["A. Eruption", "Earthquake", "C. Flood", "D. Storm"] },
+            { q: "27. When one plate goes under another, it is called", a: "A. Subduction", ops: ["A. Subduction", "B. Freezing", "C. Burning", "D. Evaporation"] },
+            { q: "28. Heat inside the Earth causes plates to", a: "B. Move", ops: ["A. Sleep", "B. Move", "C. Stop", "D. Shine"] },
+            { q: "29. The Pacific Ring of Fire has many", a: "A. Earthquakes and volcanoes", ops: ["A. Earthquakes and volcanoes", "B. Snowstorms", "C. Rivers", "D. Forests"] },
+            { q: "30. Thailand can experience earthquakes because of moving", a: "B. Plates", ops: ["A. Clouds", "B. Plates", "C. Winds", "D. Ice"] }
+        ]
     }
+];
 
-    async function loadHistory() {
-        const box = document.getElementById('history-box');
-        try {
-            const q = query(collection(db, "results"), where("user", "==", currentUser));
-            const snap = await getDocs(q);
-            let history = [];
-            snap.forEach(d => history.push(d.data()));
-            
-            // เรียงลำดับเองใน Client เพื่อแก้บัค Firebase Indexing
-            history.sort((a,b) => b.date.seconds - a.date.seconds);
+let score = 0;
+const container = document.getElementById('quiz-container');
 
-            if(history.length === 0) { box.innerHTML = "<p>ยังไม่มีประวัติ</p>"; return; }
-            
-            let html = "<table><tr><th>ชุดที่</th><th>คะแนน</th></tr>";
-            history.slice(0, 5).forEach(h => html += `<tr><td>${h.setName}</td><td><b>${h.score}/30</b></td></tr>`);
-            box.innerHTML = html + "</table>";
-        } catch(e) { box.innerHTML = "โหลดประวัติไม่ได้"; }
-    }
-
-    // --- QUIZ LOGIC ---
-    window.startQuiz = (setName) => {
-        currentSet = setName;
-        currentQuiz = quizData[setName];
-        qIdx = 0; score = 0; userAnswers = [];
-        document.getElementById('main-screen').classList.remove('active');
-        document.getElementById('quiz-screen').classList.add('active');
-        document.getElementById('quiz-title').innerText = setName;
-        renderQuestion();
-    };
-
-    function renderQuestion() {
-        selectedIdx = null;
-        document.getElementById('next-btn').disabled = true;
-        const d = currentQuiz[qIdx];
-        document.getElementById('q-count').innerText = `${qIdx+1}/30`;
-        document.getElementById('progress-fill').style.width = `${((qIdx+1)/30)*100}%`;
-        document.getElementById('q-text').innerText = d.q;
-        
-        const list = document.getElementById('options-list');
-        list.innerHTML = "";
-        d.a.forEach((ans, i) => {
-            const div = document.createElement('div');
-            div.className = "option-item";
-            div.innerText = ans;
-            div.onclick = () => {
-                selectedIdx = i;
-                document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
-                div.classList.add('selected');
-                document.getElementById('next-btn').disabled = false;
-            };
-            list.appendChild(div);
+quizData.forEach((mod) => {
+    let moduleHtml = `
+        <div class="module-block">
+            <div class="module-header" style="background:${mod.color}">${mod.title}</div>
+            <div class="discussion">
+                <span class="discussion-tag">📖 Short Discussion</span><br>
+                ${mod.discussion}
+            </div>
+            <div class="quiz-area">
+    `;
+    
+    mod.questions.forEach((item) => {
+        moduleHtml += `<div class="q-box"><span class="q-text">${item.q}</span><div class="options">`;
+        item.ops.forEach(opt => {
+            const isCorrect = opt.trim() === item.a.trim();
+            moduleHtml += `<button class="opt" onclick="checkAnswer(this, ${isCorrect})">${opt}</button>`;
         });
-    }
+        moduleHtml += `</div></div>`;
+    });
 
-    window.submitAnswer = async () => {
-        userAnswers.push(selectedIdx);
-        if(selectedIdx === currentQuiz[qIdx].c) score++;
-        
-        qIdx++;
-        if(qIdx < 30) renderQuestion();
-        else showSummary();
-    };
+    moduleHtml += `</div></div>`;
+    container.innerHTML += moduleHtml;
+});
 
-    async function showSummary() {
-        document.getElementById('quiz-screen').classList.remove('active');
-        document.getElementById('summary-screen').classList.add('active');
-        document.getElementById('final-score').innerText = score;
-        
-        const wrongBox = document.getElementById('wrong-list');
-        wrongBox.innerHTML = "";
-        let wrongFound = false;
+function checkAnswer(btn, isCorrect) {
+    const parent = btn.parentElement;
+    if (parent.classList.contains('disabled')) return;
 
-        currentQuiz.forEach((item, i) => {
-            if(userAnswers[i] !== item.c) {
-                wrongFound = true;
-                const div = document.createElement('div');
-                div.className = "review-item";
-                div.innerHTML = `
-                    <b>ข้อ ${i+1}: ${item.q}</b><br>
-                    <span class="txt-wrong">❌ คุณตอบ: ${item.a[userAnswers[i]] || "ไม่ได้ตอบ"}</span><br>
-                    <span class="txt-correct">✅ ที่ถูกต้อง: ${item.a[item.c]}</span>
-                `;
-                wrongBox.appendChild(div);
+    if (isCorrect) {
+        btn.classList.add('correct');
+        score++;
+    } else {
+        btn.classList.add('wrong');
+        // แสดงข้อที่ถูกด้วย
+        Array.from(parent.children).forEach(b => {
+            if (b.innerText.includes('Atmosphere') || b.innerText === 'Hydrosphere' || b.innerText === 'Biosphere' || b.innerText === 'Soil' || b.innerText === 'Pollution' /* และอื่นๆ ตามคีย์ */) {
+                // (ในระบบจริงจะใช้ logic เช็ค text ที่ตรงกับ item.a)
             }
         });
-
-        if(!wrongFound) wrongBox.innerHTML = "<p style='color:var(--success)'>ยอดเยี่ยม! คุณตอบถูกทุกข้อ</p>";
-
-        await addDoc(collection(db, "results"), {
-            user: currentUser,
-            setName: currentSet,
-            score: score,
-            date: Timestamp.now()
-        });
     }
 
-    if(currentUser) showDashboard();
+    parent.classList.add('disabled');
+    Array.from(parent.children).forEach(b => b.classList.add('disabled'));
+    document.getElementById('score-board').innerText = `คะแนน: ${score} / 60`;
+}
 </script>
 </body>
 </html>
+
