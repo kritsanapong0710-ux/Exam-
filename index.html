@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arjey Quiz Master - Full Version</title>
+    <title>Arjey Quiz Master - 3 Subjects</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --earth: #2D5A27;
             --health: #00796B;
+            --math: #1565C0; /* สีน้ำเงินสำหรับวิชาคณิตศาสตร์ */
             --wrong: #E53935;
             --correct: #43A047;
             --bg: #F5F7FA;
@@ -27,7 +28,7 @@
         }
 
         header {
-            background: linear-gradient(135deg, #1e3c1a, #004d40);
+            background: linear-gradient(135deg, #1A237E, #004d40);
             color: white;
             width: 100%;
             padding: 40px 20px;
@@ -70,6 +71,7 @@
         .filter-btn.active.all { background: #333; color: white; }
         .filter-btn.active.earth { background: var(--earth); color: white; }
         .filter-btn.active.health { background: var(--health); color: white; }
+        .filter-btn.active.math { background: var(--math); color: white; }
 
         .quiz-card {
             background: var(--card);
@@ -82,6 +84,7 @@
 
         .quiz-card.earth-card { border-left-color: var(--earth); }
         .quiz-card.health-card { border-left-color: var(--health); }
+        .quiz-card.math-card { border-left-color: var(--math); }
 
         .module-badge {
             display: inline-block;
@@ -95,6 +98,7 @@
 
         .earth-badge { background-color: var(--earth); }
         .health-badge { background-color: var(--health); }
+        .math-badge { background-color: var(--math); }
 
         .question {
             font-size: 1.1em;
@@ -122,7 +126,7 @@
         }
 
         .option:hover:not(:disabled) { border-color: #BBB; background-color: #F9F9F9; }
-        .option.correct { background-color: #E8F5E9 !important; border-color: var(--correct) !important; color: var(--earth); font-weight: bold; }
+        .option.correct { background-color: #E8F5E9 !important; border-color: var(--correct) !important; color: #1b5e20; font-weight: bold; }
         .option.wrong { background-color: #FFEBEE !important; border-color: var(--wrong) !important; color: #B71C1C; }
         .option:disabled { cursor: default; }
 
@@ -162,28 +166,39 @@
 <body>
 
 <header>
-    <h1>🌍 Arjey Quiz Master</h1>
-    <p>ระบบฝึกทำข้อสอบ: Earth Science & Health Education (100 ข้อ)</p>
+    <h1>🎓 Arjey Quiz Master</h1>
+    <p>ระบบฝึกทำข้อสอบ: Earth, Health และ Math</p>
 </header>
 
 <div class="container">
     <div class="filter-container">
-        <button class="filter-btn active all" onclick="filterQuiz('all', this)">แสดงทั้งหมด (All)</button>
-        <button class="filter-btn earth" onclick="filterQuiz('earth', this)">🌎 Earth Science (60)</button>
-        <button class="filter-btn health" onclick="filterQuiz('health', this)">🏥 Health Education (40)</button>
+        <button class="filter-btn active all" onclick="filterQuiz('all', this)">แสดงทั้งหมด</button>
+        <button class="filter-btn earth" onclick="filterQuiz('earth', this)">🌎 Earth Science</button>
+        <button class="filter-btn health" onclick="filterQuiz('health', this)">🏥 Health</button>
+        <button class="filter-btn math" onclick="filterQuiz('math', this)">📐 Math</button>
     </div>
 
     <div id="quiz-container"></div>
 
     <div class="score-section" id="score-section">
         <h2>🎉 ทำข้อสอบเสร็จสิ้น!</h2>
-        <h1 style="font-size: 4em; margin: 10px 0; color: var(--earth);" id="final-score">0 / 0</h1>
+        <h1 style="font-size: 4em; margin: 10px 0; color: #333;" id="final-score">0 / 0</h1>
         <button class="btn-reload" onclick="location.reload()">เริ่มทำใหม่อีกครั้ง</button>
     </div>
 </div>
 
 <script>
     const quizData = [
+        // --- MATH: MA 22102 (ข้อที่ไม่มีรูปภาพ) ---
+        { s: "math", m: "MA 22102: Statistics", q: "7. What is the median for 24, 23, 22, 21, and 20?", o: ["20.5", "22", "24.8", "21"], a: 1 },
+        { s: "math", m: "MA 22102: Statistics", q: "8. Thalia’s Math test marks are 45, 48, 42, 50, 49, 42. What is the average mean of his marks?", o: ["86.3", "87", "95", "89.3"], a: 0 },
+        { s: "math", m: "MA 22102: Polynomials", q: "20. Factor by GCF: 2x²y³ + 14xy² - 18x³y", o: ["2xy (xy³ + 7y – 3x²)", "xy (2xy + 14x - 18y)", "xy (2xy² + 7xy – 9x²)", "2xy (xy² + 7y - 9x²)"], a: 3 },
+        { s: "math", m: "MA 22102: Polynomials", q: "21. Factor the polynomial: m² + m – 90", o: ["(m+10) (m+9)", "(m-10) (m-9)", "(m-10) (m+9)", "(m+10) (m-9)"], a: 3 },
+        { s: "math", m: "MA 22102: Polynomials", q: "22. What are the factors of 5n² + 12n + 20?", o: ["(5n+2) (n+2)", "(n+4) (5n+1)", "(n+1) (5n+4)", "(5n-1) (n-4)"], a: 0 },
+        { s: "math", m: "MA 22102: Polynomials", q: "23. What are the factors of 2p³ + 5p² + 6p + 15 by grouping?", o: ["(p²+5) (2p+3)", "(p²+3) (2p+5)", "(2p+1) (5p²+4)", "(5p²-1) (p-3)"], a: 1 },
+        { s: "math", m: "MA 22102: Polynomials", q: "24. Factor the perfect square trinomials: 9x² + 12xy + 4y²", o: ["(3x-2y)²", "(3x+2)²", "(3x+2y)²", "(3+2y)²"], a: 2 },
+        { s: "math", m: "MA 22102: Polynomials", q: "25. Find the factors of the difference of 2 squares: 25a² – 121b²", o: ["(5a-11b)²", "(5a-11b) (5a-11b)", "(5a-11) (5a-11)", "(5a+11b) (5a-11b)"], a: 3 },
+
         // --- EARTH SCIENCE: Module 12 (1-15) ---
         { s: "earth", m: "Module 12: Environment", q: "1. The air around Earth is called the", o: ["Atmosphere", "Core", "Mantle", "Plate"], a: 0 },
         { s: "earth", m: "Module 12: Environment", q: "2. All water on Earth is called the", o: ["Atmosphere", "Hydrosphere", "Lithosphere", "Core"], a: 1 },
@@ -222,14 +237,14 @@
         { s: "earth", m: "Module 10: Earth's Layers", q: "1. Which layer do we live on?", o: ["Crust", "Mantle", "Core", "Inner core"], a: 0 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "2. Which is the thickest layer of the Earth?", o: ["Crust", "Mantle", "Ocean", "Sky"], a: 1 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "3. What is the center of the Earth called?", o: ["Crust", "Mantle", "Core", "Soil"], a: 2 },
-        { s: "earth", m: "Module 10: Earth's Layers", q: "4. The outer core is", o: ["Solid", "Liquid", "Cold", "Air"], a: 1 }, // Corrected to Liquid
+        { s: "earth", m: "Module 10: Earth's Layers", q: "4. The outer core is", o: ["Solid", "Liquid", "Cold", "Air"], a: 1 }, 
         { s: "earth", m: "Module 10: Earth's Layers", q: "5. The inner core is very", o: ["Cold", "Hot", "Soft", "Wet"], a: 1 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "6. The crust is broken into big pieces called", o: ["Plates", "Clouds", "Trees", "Waves"], a: 0 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "7. Mountains are found on the Earth's", o: ["Core", "Surface", "Mantle", "Center"], a: 1 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "8. As we go deeper inside the Earth, it gets", o: ["Colder", "Hotter", "Lighter", "Smaller"], a: 1 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "9. The study of the Earth and its layers is called", o: ["Biology", "Geology", "Astronomy", "Chemistry"], a: 1 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "10. A scientist who studies the Earth is called a", o: ["Biologist", "Geologist", "Astronaut", "Chemist"], a: 1 },
-        { s: "earth", m: "Module 10: Earth's Layers", q: "11. How many main layers does the Earth have?", o: ["Two", "Three", "Four", "Five"], a: 2 }, // Corrected to Four
+        { s: "earth", m: "Module 10: Earth's Layers", q: "11. How many main layers does the Earth have?", o: ["Two", "Three", "Four", "Five"], a: 2 }, 
         { s: "earth", m: "Module 10: Earth's Layers", q: "12. The mantle is very", o: ["Thin", "Thick", "Cold", "Small"], a: 1 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "13. Oceans are part of the Earth's", o: ["Core", "Surface", "Mantle", "Inner core"], a: 1 },
         { s: "earth", m: "Module 10: Earth's Layers", q: "14. The inner core is", o: ["Liquid", "Solid", "Gas", "Water"], a: 1 },
@@ -356,10 +371,11 @@
 
     function filterQuiz(subject, btnEl) {
         document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.remove('active', 'all', 'earth', 'health');
-            if(btn.innerText.includes('All')) btn.classList.add('all');
+            btn.classList.remove('active', 'all', 'earth', 'health', 'math');
+            if(btn.innerText.includes('แสดงทั้งหมด')) btn.classList.add('all');
             if(btn.innerText.includes('Earth')) btn.classList.add('earth');
             if(btn.innerText.includes('Health')) btn.classList.add('health');
+            if(btn.innerText.includes('Math')) btn.classList.add('math');
         });
         btnEl.classList.add('active', subject);
         renderQuiz(subject);
