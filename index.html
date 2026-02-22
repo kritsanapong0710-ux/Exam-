@@ -3,326 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arjey Mastery System</title>
+    <title>Arjey Quiz Master - Full Version</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4f46e5; --arjey1: #10b981; --arjey2: #3b82f6;
-            --bg: #f8fafc; --white: #ffffff; --text: #1e293b;
+            --earth: #2D5A27;
+            --health: #00796B;
+            --wrong: #E53935;
+            --correct: #43A047;
+            --bg: #F5F7FA;
+            --card: #FFFFFF;
         }
-        body { font-family: 'Kanit', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
-        header { background: var(--white); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        header h1 { margin: 0; color: var(--primary); font-size: 1.5rem; }
 
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
-
-        /* Screen Management */
-        .screen { display: none; animation: fadeIn 0.4s ease; }
-        .screen.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Dashboard Layout */
-        .quiz-layout { display: grid; grid-template-columns: 380px 1fr; gap: 25px; align-items: start; }
-        
-        /* Side Discussion Card */
-        .side-panel { 
-            background: white; padding: 25px; border-radius: 20px; position: sticky; top: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-top: 6px solid var(--primary);
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .discussion-content { font-size: 1rem; line-height: 1.7; color: #475569; }
-        .discussion-content b { color: var(--text); }
 
-        /* Quiz Main Area */
-        .quiz-card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .progress-container { height: 6px; background: #e2e8f0; border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 0.3s; }
-
-        .q-text { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; line-height: 1.4; }
-        .opt { 
-            background: #f8fafc; border: 2px solid #e2e8f0; padding: 18px; border-radius: 16px; 
-            margin-bottom: 12px; cursor: pointer; transition: 0.2s; font-size: 1.1rem;
+        header {
+            background: linear-gradient(135deg, #1e3c1a, #004d40);
+            color: white;
+            width: 100%;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            box-sizing: border-box;
         }
-        .opt:hover { border-color: var(--primary); background: #f0f4ff; }
-        .opt.selected { border-color: var(--primary); background: #eef2ff; font-weight: 600; }
 
-        /* Navigation Buttons */
-        .btn-row { display: flex; gap: 10px; margin-top: 20px; }
-        .btn { flex: 1; padding: 18px; border-radius: 15px; border: none; font-family: 'Kanit'; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { background: #f1f5f9; color: #64748b; }
+        header h1 { margin: 0 0 10px 0; font-size: 2.2em; }
+        header p { margin: 0; font-size: 1.1em; opacity: 0.9; }
 
-        /* History & Summary Styles */
-        .history-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .wrong-item { background: #fff1f2; border-left: 5px solid #ef4444; padding: 20px; border-radius: 15px; margin-bottom: 15px; text-align: left; }
-        
-        @media (max-width: 900px) { .quiz-layout { grid-template-columns: 1fr; } .side-panel { position: static; } }
+        .container {
+            width: 95%;
+            max-width: 850px;
+            margin-bottom: 50px;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 600;
+            font-size: 1em;
+            background: #E0E0E0;
+            color: #555;
+            transition: 0.3s;
+        }
+
+        .filter-btn.active.all { background: #333; color: white; }
+        .filter-btn.active.earth { background: var(--earth); color: white; }
+        .filter-btn.active.health { background: var(--health); color: white; }
+
+        .quiz-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid #ccc;
+        }
+
+        .quiz-card.earth-card { border-left-color: var(--earth); }
+        .quiz-card.health-card { border-left-color: var(--health); }
+
+        .module-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .earth-badge { background-color: var(--earth); }
+        .health-badge { background-color: var(--health); }
+
+        .question {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            border: 2px solid #EEE;
+            border-radius: 8px;
+            cursor: pointer;
+            background: white;
+            text-align: left;
+            font-size: 1em;
+            font-family: 'Kanit', sans-serif;
+            transition: 0.2s;
+        }
+
+        .option:hover:not(:disabled) { border-color: #BBB; background-color: #F9F9F9; }
+        .option.correct { background-color: #E8F5E9 !important; border-color: var(--correct) !important; color: var(--earth); font-weight: bold; }
+        .option.wrong { background-color: #FFEBEE !important; border-color: var(--wrong) !important; color: #B71C1C; }
+        .option:disabled { cursor: default; }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .score-section {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            display: none;
+        }
+
+        .btn-reload {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-family: 'Kanit', sans-serif;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 600px) { .options { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>ARJEY PRO : EXAM TOOL</h1>
-    <button class="btn btn-outline" style="padding: 8px 15px; flex:none" onclick="showHistory()">ประวัติการสอบ</button>
+    <h1>🌍 Arjey Quiz Master</h1>
+    <p>ระบบฝึกทำข้อสอบ: Earth Science & Health Education (100 ข้อ)</p>
 </header>
 
 <div class="container">
-    <div id="home-screen" class="screen active">
-        <h2 style="text-align:center; margin-bottom: 30px; font-weight: 400;">เลือกชุดข้อสอบเพื่อเริ่มเรียนรู้</h2>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-            <div class="quiz-card" style="cursor:pointer; text-align:center; border-bottom: 8px solid var(--arjey1)" onclick="startQuiz(0)">
-                <h2 style="color:var(--arjey1)">Pretest Arjey 1</h2>
-                <p>Environment, Rocks & Minerals</p>
-            </div>
-            <div class="quiz-card" style="cursor:pointer; text-align:center; border-bottom: 8px solid var(--arjey2)" onclick="startQuiz(1)">
-                <h2 style="color:var(--arjey2)">Pretest Arjey 2</h2>
-                <p>Earth Layers & Plate Tectonics</p>
-            </div>
-        </div>
+    <div class="filter-container">
+        <button class="filter-btn active all" onclick="filterQuiz('all', this)">แสดงทั้งหมด (All)</button>
+        <button class="filter-btn earth" onclick="filterQuiz('earth', this)">🌎 Earth Science (60)</button>
+        <button class="filter-btn health" onclick="filterQuiz('health', this)">🏥 Health Education (40)</button>
     </div>
 
-    <div id="quiz-screen" class="screen">
-        <div class="quiz-layout">
-            <div class="side-panel">
-                <h3>📖 Short Discussion</h3>
-                <div id="discussion-text" class="discussion-content"></div>
-            </div>
-            <div class="quiz-area">
-                <div class="quiz-card">
-                    <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px; opacity:0.6;">
-                        <span id="set-title">SET</span>
-                        <span id="q-counter">1/30</span>
-                    </div>
-                    <div id="q-text" class="q-text">Loading...</div>
-                    <div id="options-box"></div>
-                    <div class="btn-row">
-                        <button class="btn btn-outline" onclick="prevQ()">ย้อนกลับ</button>
-                        <button id="next-btn" class="btn btn-primary" onclick="nextQ()">ข้อถัดไป ➔</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="quiz-container"></div>
 
-    <div id="history-screen" class="screen">
-        <div class="quiz-card" style="max-width: 700px; margin: auto;">
-            <h2 style="text-align:center;">📜 ประวัติการทดสอบ</h2>
-            <div id="history-list"></div>
-            <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="goHome()">กลับหน้าหลัก</button>
-        </div>
-    </div>
-
-    <div id="result-screen" class="screen">
-        <div class="quiz-card" style="max-width: 800px; margin: auto; text-align:center;">
-            <h1 id="score-circle" style="font-size: 4rem; color: var(--primary); margin:0;">0/30</h1>
-            <p style="font-size:1.2rem; opacity:0.7;">คะแนนรวมของคุณ</p>
-            <hr style="border:0; border-top:1px solid #eee; margin:30px 0;">
-            <div id="wrong-analysis"></div>
-            <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="goHome()">กลับไปฝึกฝนอีกครั้ง</button>
-        </div>
+    <div class="score-section" id="score-section">
+        <h2>🎉 ทำข้อสอบเสร็จสิ้น!</h2>
+        <h1 style="font-size: 4em; margin: 10px 0; color: var(--earth);" id="final-score">0 / 0</h1>
+        <button class="btn-reload" onclick="location.reload()">เริ่มทำใหม่อีกครั้ง</button>
     </div>
 </div>
 
 <script>
-const quizData = [
-    {
-        name: "Arjey 1",
-        modules: [
-            {
-                text: "<b>Module 12: The Environment</b><br>The environment includes land, water, air, and living things. We need clean air and clean water to live. Pollution can harm the environment. The study of the environment is called <b>Environmental Science</b>.",
-                qRange: [0, 14]
-            },
-            {
-                text: "<b>Module 13: Minerals and Rocks</b><br>Minerals are natural solid materials found in the Earth. Rocks are made of minerals. There are three main types: <b>Igneous, Sedimentary, and Metamorphic</b>. Study of minerals is Mineralogy, rocks is Petrology.",
-                qRange: [15, 29]
-            }
-        ],
-        questions: [
-            {q:"The air around Earth is called the", a:"Atmosphere", ops:["Atmosphere","Core","Mantle","Plate"]},
-            {q:"All water on Earth is called the", a:"Hydrosphere", ops:["Atmosphere","Hydrosphere","Lithosphere","Core"]},
-            {q:"Living things are part of the", a:"Biosphere", ops:["Biosphere","Core","Mantle","Plate"]},
-            {q:"Plants grow in", a:"Soil", ops:["Soil","Fire","Metal","Air"]},
-            {q:"Dirty air and water are examples of", a:"Pollution", ops:["Energy","Pollution","Weather","Gas"]},
-            {q:"The study of the environment is called", a:"Environmental Science", ops:["Geology","Environmental Science","Astronomy","Physics"]},
-            {q:"A person who studies the environment is called an", a:"Environmental scientist", ops:["Environmental scientist","Pilot","Mechanic","Chef"]},
-            {q:"Recycling helps reduce", a:"Waste", ops:["Waste","Oxygen","Rain","Rocks"]},
-            {q:"Too much greenhouse gas can cause", a:"Global warming", ops:["Global warming","Snow","Wind","Earthquakes"]},
-            {q:"The ozone layer protects us from strong", a:"UV rays", ops:["UV rays","Rain","Snow","Sand"]},
-            {q:"Rivers and lakes contain ____ water.", a:"Fresh", ops:["Salt","Fresh","Dirty","Hot"]},
-            {q:"Cutting many trees is called", a:"Deforestation", ops:["Planting","Recycling","Deforestation","Cleaning"]},
-            {q:"Clean water is important for", a:"Drinking", ops:["Drinking","Burning","Melting","Breaking"]},
-            {q:"Taking care of the environment is the job of", a:"Everyone", ops:["Scientists only","Everyone","Teachers only","No one"]},
-            {q:"The water cycle includes rain and", a:"Condensation", ops:["Condensation","Burning","Freezing","Cutting"]},
-            {q:"A mineral is a natural", a:"Solid", ops:["Solid","Liquid","Gas","Animal"]},
-            {q:"Rocks are made of", a:"Minerals", ops:["Minerals","Water","Air","Clouds"]},
-            {q:"The study of minerals is called", a:"Mineralogy", ops:["Mineralogy","Biology","Ecology","Astronomy"]},
-            {q:"The study of rocks is called", a:"Petrology", ops:["Petrology","Zoology","Botany","Meteorology"]},
-            {q:"Igneous rocks form from cooled", a:"Magma", ops:["Magma","Water","Soil","Ice"]},
-            {q:"Sedimentary rocks are made from small pieces called", a:"Sediments", ops:["Sediments","Waves","Clouds","Crystals"]},
-            {q:"Metamorphic rocks change because of heat and", a:"Pressure", ops:["Rain","Pressure","Wind","Ice"]},
-            {q:"Granite is an example of an", a:"Igneous", ops:["Igneous","Sedimentary","Liquid","Soft"]},
-            {q:"Marble is a rock", a:"Metamorphic", ops:["Igneous","Sedimentary","Metamorphic","Gas"]},
-            {q:"The Mohs scale measures mineral", a:"Hardness", ops:["Color","Hardness","Size","Shape"]},
-            {q:"Breaking rocks into small pieces is called", a:"Weathering", ops:["Weathering","Melting","Burning","Cooling"]},
-            {q:"Moving rocks by wind or water is called", a:"Erosion", ops:["Erosion","Freezing","Heating","Pressing"]},
-            {q:"The rock cycle shows how rocks", a:"Change", ops:["Change","Sleep","Shine","Float"]},
-            {q:"Fossils are usually found in rocks", a:"Sedimentary", ops:["Sedimentary","Igneous","Melted","Liquid"]},
-            {q:"Both mineralogy and petrology are part of", a:"Geology", ops:["Biology","Geology","Astronomy","Physics"]}
-        ]
-    },
-    {
-        name: "Arjey 2",
-        modules: [
-            {
-                text: "<b>Module 10: Earth's Layers</b><br>Earth has four layers: <b>crust, mantle, outer core, and inner core</b>. We live on the crust. The outer core is liquid metal, and the inner core is solid. Geology is the study of the Earth.",
-                qRange: [0, 14]
-            },
-            {
-                text: "<b>Module 11: Plate Tectonics</b><br>The Earth's crust is broken into large <b>plates</b>. They move slowly, causing <b>earthquakes</b> and <b>volcanoes</b>. Study is called Plate Tectonics.",
-                qRange: [15, 29]
-            }
-        ],
-        questions: [
-            {q:"Which layer do we live on?", a:"Crust", ops:["Crust","Mantle","Core","Inner core"]},
-            {q:"Which is the thickest layer of the Earth?", a:"Mantle", ops:["Crust","Mantle","Ocean","Sky"]},
-            {q:"What is the center of the Earth called?", a:"Core", ops:["Crust","Mantle","Core","Soil"]},
-            {q:"The outer core is", a:"Liquid", ops:["Solid","Liquid","Cold","Air"]},
-            {q:"The inner core is very", a:"Hot", ops:["Cold","Hot","Soft","Wet"]},
-            {q:"The crust is broken into big pieces called", a:"Plates", ops:["Plates","Clouds","Trees","Waves"]},
-            {q:"Mountains are found on the Earth's", a:"Surface", ops:["Core","Surface","Mantle","Center"]},
-            {q:"As we go deeper inside the Earth, it gets", a:"Hotter", ops:["Colder","Hotter","Lighter","Smaller"]},
-            {q:"The study of the Earth and its layers is called", a:"Geology", ops:["Biology","Geology","Astronomy","Chemistry"]},
-            {q:"A scientist who studies the Earth is called a", a:"Geologist", ops:["Biologist","Geologist","Astronaut","Chemist"]},
-            {q:"How many main layers does the Earth have?", a:"Four", ops:["Two","Three","Four","Five"]},
-            {q:"The mantle is very", a:"Thick", ops:["Thin","Thick","Cold","Small"]},
-            {q:"Oceans are part of the Earth's", a:"Surface", ops:["Core","Surface","Mantle","Inner core"]},
-            {q:"The inner core is", a:"Solid", ops:["Liquid","Solid","Gas","Water"]},
-            {q:"Rivers flow on the Earth's", a:"Surface", ops:["Surface","Core","Mantle","Center"]},
-            {q:"The big pieces of the crust are called", a:"Plates", ops:["Plates","Clouds","Waves","Trees"]},
-            {q:"Plates move very", a:"Slowly", ops:["Fast","Slowly","Never","Backward"]},
-            {q:"Moving plates can cause", a:"Earthquakes", ops:["Rainbows","Earthquakes","Seasons","Day and night"]},
-            {q:"A mountain that erupts lava is a", a:"Volcano", ops:["Hill","Volcano","Valley","Plain"]},
-            {q:"Most earthquakes happen near plate", a:"Boundaries", ops:["Centers","Boundaries","Rivers","Farm"]},
-            {q:"When plates push together, they can form", a:"Mountains", ops:["Rivers","Mountains","Clouds","Lakes"]},
-            {q:"When plates move apart, new ocean floor can", a:"Form", ops:["Break","Form","Melt","Sink"]},
-            {q:"The study of plate movement is called", a:"Plate Tectonics", ops:["Biology","Plate Tectonics","Ecology","Astronomy"]},
-            {q:"A scientist who studies earthquakes is called a", a:"Seismologist", ops:["Seismologist","Dentist","Pilot","Engineer"]},
-            {q:"Volcanoes are common near plate", a:"Boundaries", ops:["Boundaries","Centers","Lakes","Forests"]},
-            {q:"The shaking of the ground is called an", a:"Earthquake", ops:["Eruption","Earthquake","Flood","Storm"]},
-            {q:"When one plate goes under another, it is called", a:"Subduction", ops:["Subduction","Freezing","Burning","Evaporation"]},
-            {q:"Heat inside the Earth causes plates to", a:"Move", ops:["Sleep","Move","Stop","Shine"]},
-            {q:"The Pacific Ring of Fire has many", a:"Earthquakes and volcanoes", ops:["Earthquakes and volcanoes","Snowstorms","Rivers","Forests"]},
-            {q:"Thailand can experience earthquakes because of moving", a:"Plates", ops:["Clouds","Plates","Winds","Ice"]}
-        ]
-    }
-];
+    const quizData = [
+        // --- EARTH SCIENCE: Module 12 (1-15) ---
+        { s: "earth", m: "Module 12: Environment", q: "1. The air around Earth is called the", o: ["Atmosphere", "Core", "Mantle", "Plate"], a: 0 },
+        { s: "earth", m: "Module 12: Environment", q: "2. All water on Earth is called the", o: ["Atmosphere", "Hydrosphere", "Lithosphere", "Core"], a: 1 },
+        { s: "earth", m: "Module 12: Environment", q: "3. Living things are part of the", o: ["Biosphere", "Core", "Mantle", "Plate"], a: 0 },
+        { s: "earth", m: "Module 12: Environment", q: "4. Plants grow in", o: ["Soil", "Fire", "Metal", "Air"], a: 0 },
+        { s: "earth", m: "Module 12: Environment", q: "5. Dirty air and water are examples of", o: ["Energy", "Pollution", "Weather", "Gas"], a: 1 },
+        { s: "earth", m: "Module 12: Environment", q: "6. The study of the environment is called", o: ["Geology", "Environmental Science", "Astronomy", "Physics"], a: 1 },
+        { s: "earth", m: "Module 12: Environment", q: "7. A person who studies the environment is called an", o: ["Environmental scientist", "Pilot", "Mechanic", "Chef"], a: 0 },
+        { s: "earth", m: "Module 12: Environment", q: "8. Recycling helps reduce", o: ["Waste", "Oxygen", "Rain", "Rocks"], a: 0 },
+        { s: "earth", m: "Module 12: Environment", q: "9. Too much greenhouse gas can cause", o: ["Global warming", "Snow", "Wind", "Earthquakes"], a: 0 },
+        { s: "earth", m: "Module 12: Environment", q: "10. The ozone layer protects us from strong", o: ["UV rays", "Rain", "Snow", "Sand"], a: 0 },
+        { s: "earth", m: "Module 12: Environment", q: "11. Rivers and lakes contain ________ water.", o: ["Salt", "Fresh", "Dirty", "Hot"], a: 1 },
+        { s: "earth", m: "Module 12: Environment", q: "12. Cutting many trees is called", o: ["Planting", "Recycling", "Deforestation", "Cleaning"], a: 2 },
+        { s: "earth", m: "Module 12: Environment", q: "13. Clean water is important for", o: ["Drinking", "Burning", "Melting", "Breaking"], a: 0 },
+        { s: "earth", m: "Module 12: Environment", q: "14. Taking care of the environment is the job of", o: ["Scientists only", "Everyone", "Teachers only", "No one"], a: 1 },
+        { s: "earth", m: "Module 12: Environment", q: "15. The water cycle includes rain and", o: ["Condensation", "Burning", "Freezing", "Cutting"], a: 0 },
 
-let curSet = null;
-let curIdx = 0;
-let userAns = [];
+        // --- EARTH SCIENCE: Module 13 (16-30) ---
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "16. A mineral is a natural", o: ["Solid", "Liquid", "Gas", "Animal"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "17. Rocks are made of", o: ["Minerals", "Water", "Air", "Clouds"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "18. The study of minerals is called", o: ["Mineralogy", "Biology", "Ecology", "Astronomy"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "19. The study of rocks is called", o: ["Petrology", "Zoology", "Botany", "Meteorology"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "20. Igneous rocks form from cooled", o: ["Magma", "Water", "Soil", "Ice"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "21. Sedimentary rocks are made from small pieces called", o: ["Sediments", "Waves", "Clouds", "Crystals"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "22. Metamorphic rocks change because of heat and", o: ["Rain", "Pressure", "Wind", "Ice"], a: 1 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "23. Granite is an example of an ________ rock", o: ["Igneous", "Sedimentary", "Liquid", "Soft"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "24. Marble is a ________ rock", o: ["Igneous", "Sedimentary", "Metamorphic", "Gas"], a: 2 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "25. The Mohs scale measures mineral", o: ["Color", "Hardness", "Size", "Shape"], a: 1 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "26. Breaking rocks into small pieces is called", o: ["Weathering", "Melting", "Burning", "Cooling"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "27. Moving rocks by wind or water is called", o: ["Erosion", "Freezing", "Heating", "Pressing"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "28. The rock cycle shows how rocks", o: ["Change", "Sleep", "Shine", "Float"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "29. Fossils are usually found in ________ rocks", o: ["Sedimentary", "Igneous", "Melted", "Liquid"], a: 0 },
+        { s: "earth", m: "Module 13: Minerals & Rocks", q: "30. Both mineralogy and petrology are part of", o: ["Biology", "Geology", "Astronomy", "Physics"], a: 1 },
 
-function startQuiz(idx) {
-    curSet = quizData[idx];
-    curIdx = 0;
-    userAns = new Array(30).fill(null);
-    showScreen('quiz-screen');
-    loadQ();
-}
+        // --- EARTH SCIENCE: Module 10 (1-15) *Corrected* ---
+        { s: "earth", m: "Module 10: Earth's Layers", q: "1. Which layer do we live on?", o: ["Crust", "Mantle", "Core", "Inner core"], a: 0 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "2. Which is the thickest layer of the Earth?", o: ["Crust", "Mantle", "Ocean", "Sky"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "3. What is the center of the Earth called?", o: ["Crust", "Mantle", "Core", "Soil"], a: 2 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "4. The outer core is", o: ["Solid", "Liquid", "Cold", "Air"], a: 1 }, // Corrected to Liquid
+        { s: "earth", m: "Module 10: Earth's Layers", q: "5. The inner core is very", o: ["Cold", "Hot", "Soft", "Wet"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "6. The crust is broken into big pieces called", o: ["Plates", "Clouds", "Trees", "Waves"], a: 0 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "7. Mountains are found on the Earth's", o: ["Core", "Surface", "Mantle", "Center"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "8. As we go deeper inside the Earth, it gets", o: ["Colder", "Hotter", "Lighter", "Smaller"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "9. The study of the Earth and its layers is called", o: ["Biology", "Geology", "Astronomy", "Chemistry"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "10. A scientist who studies the Earth is called a", o: ["Biologist", "Geologist", "Astronaut", "Chemist"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "11. How many main layers does the Earth have?", o: ["Two", "Three", "Four", "Five"], a: 2 }, // Corrected to Four
+        { s: "earth", m: "Module 10: Earth's Layers", q: "12. The mantle is very", o: ["Thin", "Thick", "Cold", "Small"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "13. Oceans are part of the Earth's", o: ["Core", "Surface", "Mantle", "Inner core"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "14. The inner core is", o: ["Liquid", "Solid", "Gas", "Water"], a: 1 },
+        { s: "earth", m: "Module 10: Earth's Layers", q: "15. Rivers flow on the Earth's", o: ["Surface", "Core", "Mantle", "Center"], a: 0 },
 
-function loadQ() {
-    const qData = curSet.questions[curIdx];
-    document.getElementById('set-title').innerText = curSet.name;
-    document.getElementById('q-counter').innerText = `${curIdx + 1} / 30`;
-    document.getElementById('q-text').innerText = qData.q;
-    document.getElementById('progress-bar').style.width = `${((curIdx+1)/30)*100}%`;
-    
-    // Update Discussion Side Panel
-    const mod = curSet.modules.find(m => curIdx >= m.qRange[0] && curIdx <= m.qRange[1]);
-    document.getElementById('discussion-text').innerHTML = mod.text;
+        // --- EARTH SCIENCE: Module 11 (16-30) ---
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "16. The big pieces of the crust are called", o: ["Plates", "Clouds", "Waves", "Trees"], a: 0 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "17. Plates move very", o: ["Fast", "Slowly", "Never", "Backward"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "18. Moving plates can cause", o: ["Rainbows", "Earthquakes", "Seasons", "Day and night"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "19. A mountain that erupts lava is a", o: ["Hill", "Volcano", "Valley", "Plain"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "20. Most earthquakes happen near plate", o: ["Centers", "Boundaries", "Rivers", "Farm"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "21. When plates push together, they can form", o: ["Rivers", "Mountains", "Clouds", "Lakes"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "22. When plates move apart, new ocean floor can", o: ["Break", "Form", "Melt", "Sink"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "23. The study of plate movement is called", o: ["Biology", "Plate Tectonics", "Ecology", "Astronomy"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "24. A scientist who studies earthquakes is called a", o: ["Seismologist", "Dentist", "Pilot", "Engineer"], a: 0 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "25. Volcanoes are common near plate", o: ["Boundaries", "Centers", "Lakes", "Forests"], a: 0 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "26. The shaking of the ground is called an", o: ["Eruption", "Earthquake", "Flood", "Storm"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "27. When one plate goes under another, it is called", o: ["Subduction", "Freezing", "Burning", "Evaporation"], a: 0 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "28. Heat inside the Earth causes plates to", o: ["Sleep", "Move", "Stop", "Shine"], a: 1 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "29. The Pacific Ring of Fire has many", o: ["Earthquakes and volcanoes", "Snowstorms", "Rivers", "Forests"], a: 0 },
+        { s: "earth", m: "Module 11: Plate Tectonics", q: "30. Thailand can experience earthquakes because of moving", o: ["Clouds", "Plates", "Winds", "Ice"], a: 1 },
 
-    const box = document.getElementById('options-box');
-    box.innerHTML = '';
-    qData.ops.forEach(opt => {
-        const div = document.createElement('div');
-        div.className = `opt ${userAns[curIdx] === opt ? 'selected' : ''}`;
-        div.innerText = opt;
-        div.onclick = () => {
-            userAns[curIdx] = opt;
-            loadQ();
-        };
-        box.appendChild(div);
-    });
+        // --- HEALTH EDUCATION: HP 22102 (1-40) ---
+        { s: "health", m: "HP 22102: Drug Rehab", q: "1. Which of the following is not the rehabilitation of drug addicts?", o: ["Take care those who stopped using", "Invite friends to exercise", "Hang out with drug addicts", "Arrange dancing competition"], a: 2 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "2. Which factor helps the drug addict stop using drugs permanently?", o: ["Doctors and nurses", "Drug cartels", "Family and oneself", "Drug pushers"], a: 2 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "3. Which of the following is a mental way of drug addicts’ rehabilitation?", o: ["Using electric wave", "Using methadone", "Religious treatment", "Using herbs"], a: 2 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "4. Which one is correct regarding sources of assistance and rehabilitation of drug addicts?", o: ["Organization that treats many", "Governmental organization", "Medical treatment organization", "Mental treatment organization"], a: 1 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "5. Which of the following rehabilitation accepts patients to be treated in the hospital?", o: ["In-patient rehabilitation", "Out-patient rehabilitation", "Taking action and following up", "Analyzing the cause"], a: 0 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "6. Which of the following is not a physical rehabilitation of drug addicts?", o: ["Religious Treatment", "Using anti-drugs", "Using herbs as medicine", "Using electric wave"], a: 0 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "7. If a drug addict captures you as a hostage, what should you do?", o: ["Blame with cruel words", "Persuade the drug addict", "Fight as much as possible", "Shout for help"], a: 1 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "8. Which is not a stage of the treatment of drug addicts as an out-patient?", o: ["Preparing stage", "Drug-activating stage", "Rehabilitation Stage", "Following-up stage"], a: 1 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "9. Which one is the mental treatment for drug addicts?", o: ["Consulting with psychiatrist", "Using medicine to stimulate", "Maintaining drugs", "Using anti-drugs medicine"], a: 0 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "10. Which of the following is the right way to treat drug addicts?", o: ["Seeing the doctor regularly", "Reducing drugs but still using", "Stop seeing the doctor", "Trying to stop using by medicine"], a: 0 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "11. Who creates the value of oneself after the treatment?", o: ["Areeya stays at home", "Krittika applies for a job", "Sirima blames herself", "Nut hangs out with addicts"], a: 1 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "12. What is the old way of treating drug addicts?", o: ["Psychiatrist", "Herb", "Electric wave", "Group Activity"], a: 1 },
+        { s: "health", m: "HP 22102: Drug Rehab", q: "13. Which has a relationship with the treatment of out-patients?", o: ["Treating and staying there", "Appointing patients to receive medicine", "Regular patient in hospital", "Joining activities all the time"], a: 1 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "14. What should you do to avoid vices?", o: ["Racing with friends", "Hanging out with gamblers", "Watching friends gambling", "Refusing/stop hanging out with gamblers"], a: 3 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "15. Which one is the use of life skills in daily life?", o: ["Acting according to satisfaction", "Being pessimistic", "Hanging out with high education", "Knowing what you are doing"], a: 3 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "16. Which one is not a risk situation?", o: ["Racing motorcycle at night", "Travelling alone at night", "Hanging out with bad people", "Applying for football competition"], a: 3 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "17. When being forced or raped by somebody, what is the right thing to do?", o: ["Stay away", "Try to postpone the time by talking nicely", "Shout very loud", "Run as fast as you can"], a: 1 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "18. How to avoid being robbed?", o: ["Immediately call a friend", "Do not walk alone in dangerous places", "Wear expensive jewelries", "Show your money to everyone"], a: 1 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "19. What is the first step of the thinking process in living life?", o: ["Analyzing the cause of the problem", "Collecting data", "Taking action", "Conclusion and evaluation"], a: 0 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "20. Which behavior might lead to sexual intercourse the most?", o: ["Being alone with the opposite sex", "Having opposite sex as friend", "Sexy dressing", "Allowing to touch the body"], a: 0 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "21. What is the condition or situation that one is facing at a certain moment?", o: ["Emergency Situation", "Good Health", "Holidays", "Stressful"], a: 0 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "22. Which of the following is the effect of fighting?", o: ["Warm family", "Unity", "Hurting", "School loses reputation"], a: 2 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "23. Which behavior might lead to having an accident the most?", o: ["Wearing a helmet", "Limiting speed", "Driving even when drunk", "Stopping at red-light"], a: 2 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "24. Improving personality that causes confidence can be done by?", o: ["Carrying a lot of money", "No exercise", "Assessing of feelings", "Dressing appropriately"], a: 3 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "25. Which of the following is not a cause of fighting?", o: ["Wanting to win", "Jealousy and vengeance", "Conflict of interests", "Humility and forgiveness"], a: 3 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "26. It means knowing the event that will happen in the future.", o: ["Prediction", "Life skills", "Negotiation", "Thinking Process"], a: 0 },
+        { s: "health", m: "HP 22102: Risky Behaviors", q: "27. It means talking in order to improve the situation or avoid the risk situation.", o: ["Negotiation", "Thinking Process", "Prediction", "Life Skills"], a: 0 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "28. Which emergency situation causes the loss of life and property?", o: ["Robbery", "Falling off a motorcycle", "Fire burning", "Exhausted after exercising"], a: 2 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "29. Which one is the right thing to do during emergency situation?", o: ["Frightening and shouting", "Keeping valuable stuff", "Concentrating and finding ways to solve", "Fighting with the criminal"], a: 2 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "30. The skill that helps in protecting oneself from danger in order to stop the criminal.", o: ["Negotiation", "Natural Disaster", "Refusing", "Self-protection"], a: 3 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "31. A skill that can be used to avoid use of drugs, gambling and having sexual intercourse.", o: ["Forecasting", "Happenings", "Warning sign", "Refusing"], a: 3 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "32. What should you do during earthquake?", o: ["Watch television", "Drive a car", "Use the elevator", "Stay away from a building"], a: 3 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "33. Which is the most convenient and easiest way in order to ask for help during an emergency?", o: ["Send a text message", "By shouting", "Run", "Write a message"], a: 1 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "34. If you are in the storm, what should you do?", o: ["Run as fast as you can", "Hide in a strong and secure place", "Hide under a big tree", "Stay outdoors"], a: 1 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "35. If you need to fight with a criminal, what part of his body will you attack?", o: ["Knee", "Occipital bone", "Brachium", "Foot"], a: 0 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "36. What is the right thing to do when going to the waterfall?", o: ["Being in deep water", "Being where people do not go", "Getting out when the water changes color", "Being in water while raining"], a: 2 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "37. If you are captured as a hostage, what should you do first?", o: ["Fight back", "Wait for the police", "Negotiation with nice and gentle words", "Resist"], a: 2 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "38. Which place is at risk for being robbed?", o: ["The fresh market", "The park", "The department store", "An isolated place"], a: 3 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "39. If you cannot solve an emergency situation, what will you do?", o: ["Call your parents", "Call your friends", "Call the school", "Call 191"], a: 3 },
+        { s: "health", m: "HP 22102: Self-Protection", q: "40. Which one is not a life skill for preventing and avoiding an emergency situation?", o: ["Refusing", "Negotiation", "Exercising", "Self-protection"], a: 2 }
+    ];
 
-    document.getElementById('next-btn').innerText = curIdx === 29 ? "ส่งคำตอบ" : "ข้อถัดไป ➔";
-}
+    let currentScore = 0;
+    let totalAnswered = 0;
 
-function nextQ() {
-    if (curIdx < 29) {
-        curIdx++;
-        loadQ();
-    } else {
-        submitQuiz();
-    }
-}
+    function renderQuiz(filter = 'all') {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+        currentScore = 0;
+        totalAnswered = 0;
+        document.getElementById('score-section').style.display = 'none';
 
-function prevQ() {
-    if (curIdx > 0) {
-        curIdx--;
-        loadQ();
-    }
-}
+        const filteredData = filter === 'all' ? quizData : quizData.filter(q => q.s === filter);
 
-function submitQuiz() {
-    let score = 0;
-    let wrongHTML = "";
-    curSet.questions.forEach((q, i) => {
-        if (userAns[i] === q.a) {
-            score++;
-        } else {
-            wrongHTML += `
-                <div class="wrong-item">
-                    <b>ข้อที่ ${i+1}: ${q.q}</b><br>
-                    <span style="color:#ef4444">✖ คุณตอบ: ${userAns[i] || "ไม่ได้ตอบ"}</span><br>
-                    <span style="color:#10b981">✔ เฉลย: ${q.a}</span>
+        filteredData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = `quiz-card ${item.s}-card`;
+            card.innerHTML = `
+                <span class="module-badge ${item.s}-badge">${item.m}</span>
+                <div class="question">${item.q}</div>
+                <div class="options" id="opts-${index}">
+                    ${item.o.map((opt, i) => `
+                        <button class="option" onclick="checkAns(${index}, ${i}, ${item.a}, this, ${filteredData.length})">${opt}</button>
+                    `).join('')}
                 </div>
+                <div class="feedback" id="fb-${index}"></div>
             `;
+            container.appendChild(card);
+        });
+    }
+
+    function checkAns(qIdx, selectedIdx, correctIdx, btnEl, totalQ) {
+        const optsDiv = document.getElementById(`opts-${qIdx}`);
+        const fb = document.getElementById(`fb-${qIdx}`);
+        const btns = optsDiv.getElementsByClassName('option');
+
+        for (let btn of btns) { btn.disabled = true; }
+
+        if (selectedIdx === correctIdx) {
+            btnEl.classList.add('correct');
+            fb.innerHTML = "✅ ตอบถูกต้อง!";
+            fb.style.backgroundColor = "#E8F5E9";
+            fb.style.color = "#2E7D32";
+            currentScore++;
+        } else {
+            btnEl.classList.add('wrong');
+            btns[correctIdx].classList.add('correct');
+            fb.innerHTML = `❌ ผิดครับ! ข้อที่ถูกคือ: ${btns[correctIdx].innerText}`;
+            fb.style.backgroundColor = "#FFEBEE";
+            fb.style.color = "#C62828";
         }
-    });
+        
+        fb.style.display = 'block';
+        totalAnswered++;
 
-    // Save to History
-    const history = JSON.parse(localStorage.getItem('arjey_history') || "[]");
-    history.push({ name: curSet.name, score: score, date: new Date().toLocaleString() });
-    localStorage.setItem('arjey_history', JSON.stringify(history));
+        if (totalAnswered === totalQ) {
+            document.getElementById('score-section').style.display = 'block';
+            document.getElementById('final-score').innerText = `${currentScore} / ${totalQ}`;
+        }
+    }
 
-    document.getElementById('score-circle').innerText = `${score} / 30`;
-    document.getElementById('wrong-analysis').innerHTML = wrongHTML || "<h4>สุดยอด! คุณตอบถูกทุกข้อ</h4>";
-    showScreen('result-screen');
-}
+    function filterQuiz(subject, btnEl) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active', 'all', 'earth', 'health');
+            if(btn.innerText.includes('All')) btn.classList.add('all');
+            if(btn.innerText.includes('Earth')) btn.classList.add('earth');
+            if(btn.innerText.includes('Health')) btn.classList.add('health');
+        });
+        btnEl.classList.add('active', subject);
+        renderQuiz(subject);
+    }
 
-function showHistory() {
-    const history = JSON.parse(localStorage.getItem('arjey_history') || "[]");
-    const container = document.getElementById('history-list');
-    container.innerHTML = history.length ? "" : "<p style='text-align:center'>ยังไม่มีประวัติการสอบ</p>";
-    history.reverse().forEach(item => {
-        container.innerHTML += `
-            <div class="history-card">
-                <div>
-                    <b>${item.name}</b><br>
-                    <small>${item.date}</small>
-                </div>
-                <div style="font-weight:600; color:var(--primary)">${item.score}/30</div>
-            </div>
-        `;
-    });
-    showScreen('history-screen');
-}
-
-function goHome() { showScreen('home-screen'); }
-function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    window.scrollTo(0,0);
-}
+    window.onload = () => renderQuiz('all');
 </script>
+
 </body>
 </html>
